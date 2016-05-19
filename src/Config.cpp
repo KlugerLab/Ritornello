@@ -43,49 +43,7 @@ void printVersion(){
 	fprintf(stderr,"%s\n",versionInfo);
 }
 void printHelp(){
-	const char* helpInfo =
-	"Ritornello options:\n\n"
-	"	--help	print this message\n\n"
-	"	--version	print Ritornello's current version\n\n"
-	"	-f <ChIP.bam>	ChIP.bam is a ChIP-seq sorted bam file to call peaks on. "
-	"If you're bamfile is not sorted, please use the samtools sort utility.  Additionally, "
-	"running the samtools index utility "
-	"may be required by some visualization tools (IGV etc.) but is not required by Ritornello.\n\n"
-	"	-o <OutputPrefix>	Specifies a prefix to use when reporting output.  This can be a file path. "
-	"Ex. -o /home/MyUser/MyOutputPrefix would report called peaks to /home/MyUser/MyOutputPrefix-peakSummary.narrowPeak \n\n"
-	"	-p <int>	maximum number of threads to use during execution\n\n"
-
-	"	-q <decimal>	The -log10(q-value) used to threshold reported peaks.  Ex.  Specifying -q 2 (the default) will report all peaks "
-	"that are more significant than q-value=0.01.  Set -q 0 when calling peaks for input to the "
-	"Irreproducible Discovery Rate software.\n\n"
-
-	"	-s <decimal>	The signal value used to threshold reported peaks.  The signal value is the effect size for the "
-	"reported peak and has units of read count.  It is the sum of beta1 for the positive and negative strands around a reported peak,"
-	"and can best be interpreted as the maximum likelihood number of reads due to binding at the reported peak.  Ex. specifying"
-	"-s 40 (the default) will report all peaks with signal value greater than 40.  Set -s 0 when calling peaks for input to the "
-	"Irreproducible Discovery Rate software.\n\n"
-
-	"	-n <decimal>	The minimum read and matched filter threshold.  This specifies the minimum number of reads per window "
-	"of size twice the maximum fragment length centered around the peak required to perform a likelihood ratio test.  Additionally "
-	"the matched filter (which is also normalized to units of read counts is thresholded by this number. "
-	"This threshold is mostly used to control compute time by limiting the number of tests performed.  -n 20 is the default.  Setting "
-	"it too high (larger than effect size) may cause lower expressed peaks to be missed.  Setting it lower generally increases runtime "
-	"and memory usage. Set -n 10 when calling peaks for input to the Irreproducible Discovery Rate software.\n\n"
-
-	"	--OCE	Specifying the OCE option tells Ritornello to include an additional term in the likelihood ratio test "
-	"to control for Open Chromatin Effects.  These are areas of high coverage which are generally uniform and also present "
-	"in sonicated input DNA.  Ritornello can call spurious peaks at the bounderies of these regions where coverage changes "
-	"abruptly.  --OCE is useful to avoid spurious results in highly sequenced small genomes (yeast), but may cause a loss of "
-	"sensitivity and not recommended for mouse, human, etc.\n\n"
-
-	"	--Correct-PCR	Specifying the --Correct-PCR option tells Ritornello to preprocess the read coverage and control outliers "
-	"likely due to PCR amplification bias.  We recommend using this option if Ritornello calls many spikey false positives\n\n"
-
-	"Ritornello advanced options:\n"
-	"	--debug-folder\n"
-	"	--filter-file\n"
-	"	--FLD-file\n"
-	;
+	const char* helpInfo = "Please refer to the documentation in the README.md or at https://github.com/KlugerLab/Ritornello";
 	fprintf(stderr,"%s\n",helpInfo);
 }
 /**

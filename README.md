@@ -40,7 +40,7 @@ You can move it where ever you like and/or add it to your path, or simply run it
 #Usage:
 -basic usage
 
-`./Ritornello -f MySortedBamFile.bam`
+`./Ritornello -f MySortedBamFile.bam --Correct-PCR`
 
 Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools
 
@@ -70,9 +70,9 @@ Ex. `-o /home/MyUser/MyOutputPrefix` would report called peaks to `/home/MyUser/
 
 `-n <decimal>`	The minimum read and matched filter threshold.  This specifies the minimum number of reads per window of size twice the maximum fragment length centered around the peak required to perform a likelihood ratio test.  Additionally the matched filter (which is also normalized to units of read counts is thresholded by this number. This threshold is mostly used to control compute time by limiting the number of tests performed.  `-n 20` is the default.  Setting it too high (larger than effect size) may cause lower expressed peaks to be missed.  Setting it lower generally increases runtime and memory usage. Set `-n 10` when calling peaks for input to the Irreproducible Discovery Rate software.
 
-`--OCE`	Specifying the OCE option tells Ritornello to include an additional term in the likelihood ratio test to control for Open Chromatin Effects.  These are areas of high coverage which are generally uniform and also present in sonicated input DNA.  Ritornello can call spurious peaks at the bounderies of these regions where coverage changes abruptly.  `--OCE` is useful to avoid spurious results in highly sequenced small genomes (yeast), but may cause a loss of sensitivity and not recommended for mouse, human, etc.
+`--OCE`	Specifying the OCE option tells Ritornello to include an additional term in the likelihood ratio test to more strictly control for Open Chromatin Effects.  These are areas of high coverage which are generally uniform and also present in sonicated input DNA.  Ritornello's background coverage term can usually control for most open chromatin effects, however, when coverage is extremely high, it can call spurious peaks at the bounderies of these regions where coverage changes abruptly.  `--OCE` is useful to avoid spurious results in highly sequenced small genomes (yeast), but may cause a loss of sensitivity and not recommended for mouse, human, etc.
 
-`--Correct-PCR`	Specifying the `--Correct-PCR` option tells Ritornello to preprocess the read coverage and control outliers likely due to PCR amplification bias.  We recommend using this option if Ritornello calls many spikey false positives
+`--Correct-PCR`	Specifying the `--Correct-PCR` option tells Ritornello to preprocess the read coverage and control outliers likely due to PCR amplification bias.  We recommend using this option unless you are sure PCR won't me an issue.  It does take increase computational time.
 
 #Ritornello advanced options:
 
