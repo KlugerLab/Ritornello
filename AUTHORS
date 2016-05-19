@@ -1,7 +1,7 @@
 Ritornello authors
 Primary contact <kelly.stanton@yale.edu>
 
-Kelly Stanton wrote the Ritornello software.  Kelly Stanton and Jiaqi Jin developed the algorithm and methodology.
+Kelly Stanton and Jiaqi Jin developed the algorithm and methodology.  Kelly Stanton wrote the Ritornello software.
 Roy Lederman, Sherman Weissman and Yuval Kluger also contributed to ideas present in this software.
 
 The boost libraries for C++ are used by Ritornello.  
