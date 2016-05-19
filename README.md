@@ -40,7 +40,7 @@ You can move it where ever you like and/or add it to your path, or simply run it
 #Usage:
 -basic usage
 
-`./Ritornello -f MySortedBamFile.bam --Correct-PCR`
+`./Ritornello --Correct-PCR -f MySortedBamFile.bam `
 
 Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools
 
