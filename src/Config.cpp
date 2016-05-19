@@ -38,7 +38,7 @@ Config::~Config() {
 }
 void printVersion(){
 	const char* versionInfo =
-	"Ritornello version 0.1 (beta)"
+	"Ritornello version 1.0.0"
 	;
 	fprintf(stderr,"%s\n",versionInfo);
 }
