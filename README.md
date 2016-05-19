@@ -31,8 +31,11 @@ Checkout the source using:
 
 Compile:
 
-`cd` to the `Ritornello` directory and type `make`
+`cd Ritornello`
+`make`
 
+The executable is then made at `bin/Ritornello`.
+You can move it where ever you like and/or add it to your path, or simply run it from its bin location.
 
 #Usage:
 -basic usage
