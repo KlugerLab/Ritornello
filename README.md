@@ -11,7 +11,7 @@ Currently compiled for ubuntu x64.  Mac and Windows versions coming soon.
 
 # Compiling on ubuntu:
 
-1.  install dependencies
+install dependencies:
 
 -samtools
 
@@ -25,7 +25,13 @@ Currently compiled for ubuntu x64.  Mac and Windows versions coming soon.
 
 `sudo apt-get install libboost-dev`
 
-2.  cd to Ritornello directory and type make
+Checkout the source using:
+
+`git clone https://github.com/KlugerLab/Ritornello.git`  
+
+Compile:
+
+`cd` to the `Ritornello` directory and type `make`
 
 
 #Usage:
