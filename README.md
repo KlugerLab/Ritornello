@@ -5,13 +5,13 @@ Ritornello is a high fidelity control free ChIP-seq peak calling algorithm
 
 1.  install dependencies
 
-#samtools
+-samtools
 sudo apt-get install libbam-dev
 
-#FFTW
+-FFTW
 sudo apt-get install fftw3-dev
 
-#boost
+-boost
 sudo apt-get install libboost-dev
 
 2.  cd to Ritornello directory and type make

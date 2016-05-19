@@ -1,0 +1,23 @@
+Ritornello authors
+Primary contact <kelly.stanton@yale.edu>
+
+Kelly Stanton wrote the Ritornello software.  
+
+The boost libraries for C++ are used by Ritornello.  
+uBLAS (boost) was used extensively and was initially written by Joerg Walter and Mathias Koch.  Additional
+boost libraries have many contributors.
+
+Ritornello also makes use of the Samtools library written initially by Heng Li and contributed to by 
+Bob Handsaker, Jue Ruan, Colin Hercus, and Petr Danecek.
+
+Ritornello additionally uses the FFTW library which was written by Matteo Frigo and Steven G. Johnson.  
+Stefan Kral made additional contributions to FFTW.
+
+(see their respective web sites).
+
+Websites:
+
+ Ritornello:        https://sourceforge.net/projects/ritornello/
+ Boost:             http://www.boost.org/
+ Samtools:          http://samtools.sourceforge.net/
+ fftw:        		http://www.fftw.org/
