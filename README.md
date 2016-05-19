@@ -1,6 +1,12 @@
 # Ritornello
 Ritornello is a ChIP-seq peak calling algorithm based on signal processing that can accurately call binding events without the need to do a pair total DNA input or IgG control sample.
 
+# Download precompiled binaries
+
+Currently compiled for ubuntu x64.  Mac and Windows versions coming soon.
+
+[Download](https://github.com/kstant0725/Ritornello/releases)
+
 # Compiling on ubuntu:
 
 1.  install dependencies
