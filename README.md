@@ -49,7 +49,33 @@ Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by 
 
 The output is printed to `MySortedBamFile.bam-peakSummary.narrowPeak` where `MySortedBamFile.bam` is replaced with the output prefix if the `-o` option is specified.  The output is a [narrowPeak](https://genome.ucsc.edu/FAQ/FAQformat.html#format12) format file, an extension of the bed format.
 
-To analyze these results in R we recommend using the rtracklayer package.  As sample analysis for comparing overlapping TSS annotation is provided
+To analyze these results in R we recommend using the `rtracklayer` package.  A sample analysis for comparing overlapping TSS annotation is as follows:
+
+	#import the rtracklayer library
+	library(rtracklayer)
+	
+	#define the extra columns need for the narrowpeak format (in addition to the bed format columns)
+	extraCols_narrowPeak <- c(signalValue = "numeric", pValue = "numeric",qValue = "numeric", peak = "integer")
+	
+	#read in the peaks called by Ritornello to a GRanges object
+	RitornelloPeaks = import.bed(con="MySortedBamFile.bam-peakSummary.narrowPeak",extraCols = extraCols_narrowPeak)
+	
+	#read in the tss annotation
+	TSS = import.bed(con="tss.bed")
+	
+	extend = function(x,n){
+		start(x) = start(x)-n
+		end(x) = end(x)+n
+		return(x)
+	}
+	
+	#extend the GRanges object by 100 bp upstream and downstream
+	RitornelloPeaksWithin100bp =extend(RitornelloPeaks,100)
+	
+	#finally we can check for peaks that overlapped the TSS annotation
+	RitornelloTSSPeaks =  RitornelloPeaks[countOverlaps(RitornelloPeaksWithin100bp, TSS)>0]
+
+The full script with details on how to create all required files and run the script is provided
 [here](https://github.com/KlugerLab/Ritornello/blob/master/Scripts/AnalyzeRitornelloOutput.R)
  
 #Ritornello options:
