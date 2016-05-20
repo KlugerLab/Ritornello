@@ -1,5 +1,5 @@
 # Ritornello
-Ritornello is a ChIP-seq peak calling algorithm based on signal processing that can accurately call binding events without the need to do a pair total DNA input or IgG control sample.
+Ritornello is a ChIP-seq peak calling algorithm based on signal processing that can accurately call binding events without the need to do a pair total DNA input or IgG control sample.  It has been tested for use with narrow binding events such as transcription factor ChIP-seq.
 
 [Ritornello Preprint](http://biorxiv.org/content/early/2015/12/11/034090)
 
@@ -45,6 +45,13 @@ You can move it where ever you like and/or add it to your path, or simply run it
 
 Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools
 
+#Analyzing the output:
+
+The output is printed to `MySortedBamFile.bam-peakSummary.narrowPeak` where `MySortedBamFile.bam` is replaced with the output prefix if the `-o` option is specified.  The output is a [narrowPeak](https://genome.ucsc.edu/FAQ/FAQformat.html#format12) format file, an extension of the bed format.
+
+To analyze these results in R we recommend using the rtracklayer package.  As sample analysis for comparing overlapping TSS annotation is provided
+[here](https://github.com/KlugerLab/Ritornello/blob/master/Scripts/AnalyzeRitornelloOutput.R)
+ 
 #Ritornello options:
 `--help`	print the help message
 
