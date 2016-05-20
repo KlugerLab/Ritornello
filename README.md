@@ -54,11 +54,14 @@ To analyze these results in R we recommend using the `rtracklayer` package.  A s
 	#import the rtracklayer library
 	library(rtracklayer)
 	
-	#define the extra columns need for the narrowpeak format (in addition to the bed format columns)
-	extraCols_narrowPeak <- c(signalValue = "numeric", pValue = "numeric",qValue = "numeric", peak = "integer")
-	
+	#define the extra columns need for the narrowpeak format (in addition to the bed format 
+	#columns)
+	extraCols_narrowPeak <- c(signalValue = "numeric", pValue = "numeric",
+		qValue = "numeric", peak = "integer")
+		
 	#read in the peaks called by Ritornello to a GRanges object
-	RitornelloPeaks = import.bed(con="MySortedBamFile.bam-peakSummary.narrowPeak",extraCols = extraCols_narrowPeak)
+	RitornelloPeaks = import.bed(con="MySortedBamFile.bam-peakSummary.narrowPeak",
+		extraCols = extraCols_narrowPeak)
 	
 	#read in the tss annotation
 	TSS = import.bed(con="tss.bed")
