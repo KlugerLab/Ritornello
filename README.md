@@ -32,6 +32,7 @@ Checkout the source using:
 Compile:
 
 `cd Ritornello`
+
 `make`
 
 The executable is then made at `bin/Ritornello`.
@@ -43,14 +44,6 @@ You can move it where ever you like and/or add it to your path, or simply run it
 `./Ritornello --Correct-PCR -f MySortedBamFile.bam `
 
 Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools
-
-`-p [numProcs]`  specify the maximum number of threads to use during Ritornello's execution
-
-`-o [outPrefix]`  A string specifying the prefix to use when generating output.  This can be a file path.  Ex.   `/home/MyUser/MyOutputPrefix`
-
-`-q [-log10(q-value) cutoff]` (default is 2).  For example, if you would like to threshold at q-value 0.01, specify `-q 2`
-
-`-s  [signal value threshold]` The minimum effect size to report a peak.  This is Beta1  (summed for both strands) from the publication.  Default is `-s 40`
 
 #Ritornello options:
 `--help`	print the help message
