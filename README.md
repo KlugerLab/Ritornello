@@ -38,12 +38,42 @@ Compile:
 The executable is then made at `bin/Ritornello`.
 You can move it where ever you like and/or add it to your path, or simply run it from its bin location.
 
-#Usage:
+#Creating a sorted bam file:
+
+This tutorial assumes the user starts with sequenced ChIP-seq reads in the fastq format, `MyFile.fastq` for singled end or `MyFile_1.fastq` and `MyFile_2.fastq` for paired-end.
+
+The first step in preparing a sorted bam file, the input for Ritornello, is to map the ChIP-seq reads to the reference genome.  This can be done using any comparative genome alignment tool.  For this tutorial we will use Bowtie, which can be downloaded [here](http://bowtie-bio.sourceforge.net/index.shtml)
+
+Also install samtools, which can be downloaded [here](http://samtools.sourceforge.net/) or on Ubuntu installed using:
+
+`sudo apt-get install samtools`
+
+Map the reads to the genome using the following command.  In this example hg19 (human genome version 19) is the prefix for the bowtie index (reference genome), so make sure to download the correct index (also found on the bowtie website for most organisms) and specify the prefix that is appropriate for your organism.  `MyFile.fastq` for singled end or `MyFile_1.fastq` and `MyFile_2.fastq` for paired-end are user provided fastq files containing the ChIP-seq reads from the sequencer.  For single end run:  
+
+`bowtie -S -n 2 -k 1 -m 1 -X 1000 -I 0 --best --strata hg19 MyFile.fastq | samtools view -bS - > MyBamFile.bam`
+
+or if you have paired end data, run:
+
+`bowtie -S -n 2 -k 1 -m 1 -X 1000 -I 0 --best --strata -1 MyFile_1.fastq -2 MyFile_2.fastq hg19 | samtools view -bS - > MyBamFile.bam`
+        
+This will create a bam (alignment) file in the same directory.  See the bowtie documentation for a detailed explanation of each option.
+
+To create a sorted bam file, call the samtools sort command on your bam file as follows:
+
+`samtools sort MyBamFile.bam MySortedBamFile`
+
+Indexing the bam file is useful so that it can be used with other tools such as the IGV genome browser, but not required to run ritornello.  To index the bam file, run the following:
+
+`samtools index MySortedBamFile.bam`
+
+This will create an index `MySortedBamFile.bam.bai` file in the same directory
+
+#Using Ritornello:
 -basic usage
 
 `./Ritornello --Correct-PCR -f MySortedBamFile.bam `
 
-Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools
+Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools.  We recommend the --Correct-PCR option unless you are fairly certain that PCR amplification bias wont be an issue.  This option does increase runtime however.
 
 #Analyzing the output:
 
