@@ -141,6 +141,9 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 	for(int ii = 0; ii < parms.getNumThreads(); ++ii){
 		likelihoodRatioTest[ii] = new LikelihoodRatioTest(parms.getMaxFragmentLength(),fir, fld,parms.getModelOpenChromatinEffect());
 	}
+
+	Artifact::init();
+
 	omp_lock_t writelock;
 	omp_init_lock(&writelock);
 
@@ -164,9 +167,10 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 			percent = progress*100/peaks.data.size();
 			fprintf(stderr, "*");
 		}
-		omp_unset_lock(&writelock);
+		//The artifact test also requires write lock due to the FFTHandler
 		peaks.data[ii].artifactScore = Artifact::test(parms.getMaxFragmentLength(),
 				readLength, fir, peaks.data[ii],artifactTestRatio, halfLength);
+		omp_unset_lock(&writelock);
 		if(peaks.data[ii].artifactScore<0.5)
 			peaks.data[ii].isArtifact = true;
 		else
@@ -191,6 +195,7 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 	for(int ii = 0; ii < parms.getNumThreads(); ++ii){
 		delete likelihoodRatioTest[ii];
 	}
+	Artifact::destroy();
 
 	//count artifacts and candidate peaks
 	long numArtifacts = 0;

@@ -37,7 +37,7 @@ void SamStream::init(const char* samFileName) {
 	bytesRead = samread(samFile,alignment);
 	if(alignment->core.tid==-1 || bytesRead <=0)
 	{
-		fprintf(stderr, "Failed to read any mapping alignment%s\n", samFileName);
+		fprintf(stderr, "Failed to read any mapping alignments for [%s]\n", samFileName);
 		exit(EXIT_FAILURE);
 	}
 	readLength = alignment->core.l_qseq;
