@@ -21,7 +21,7 @@ public:
 	static vector<double> readDoubleArrayFromFile(const char* fileName );
 	static void printDoubleArrayToFile(double* array, int length, const char* fileName );
 	static void debugPeaks(long windowSize, const Peaks& peaks);
-	static vector<Peak> readPeaks(long windowSize);
+	static vector<Peak> readPeaks(long windowSize, const char* fileName);
 };
 
 #endif /* IOHANDLER_H_ */

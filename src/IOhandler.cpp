@@ -45,18 +45,18 @@ vector<double> IOhandler::readDoubleArrayFromFile(const char* fileName ){
 
 void IOhandler::debugPeaks(long windowSize, const Peaks& peaks){
 	ofstream outputFile (string(outputFolder+"PeakDebug.txt").c_str());
-	int iter =  min(100,(int)peaks.data.size());
+	int iter = (int)peaks.data.size();
 	for(int ii =0; ii <iter; ++ii){
 		outputFile<<peaks.data[ii].chr<<'\t';
 		outputFile<<peaks.data[ii].pos<<'\t';
 		outputFile<<peaks.data[ii].lpValue<<'\t';
 		outputFile<<peaks.data[ii].betaAlt<<'\t';
 		outputFile<<peaks.data[ii].isArtifact<<'\t';
-		for(int jj = 0; jj < 2*windowSize; ++jj){
-			outputFile<<peaks.data[ii].pstrand[jj]<<'\t';
+		for(int jj = 0; jj < 4*windowSize; ++jj){
+			outputFile<<peaks.data[ii].pstrandExtended[jj]<<'\t';
 		}
-		for(int jj = 0; jj < 2*windowSize; ++jj){
-			outputFile<<peaks.data[ii].mstrand[jj]<<'\t';
+		for(int jj = 0; jj < 4*windowSize; ++jj){
+			outputFile<<peaks.data[ii].mstrandExtended[jj]<<'\t';
 		}
 		outputFile<<peaks.data[ii].localPeakPos.size()<<'\t';
 		for(int jj = 0; jj < (int)peaks.data[ii].localPeakPos.size(); ++jj){
@@ -66,9 +66,9 @@ void IOhandler::debugPeaks(long windowSize, const Peaks& peaks){
 	}
 	outputFile.close();
 }
-vector<Peak> IOhandler::readPeaks(long windowSize){
+vector<Peak> IOhandler::readPeaks(long windowSize, const char* fileName){
 	vector<Peak> peaks;
-	ifstream inFile (string(outputFolder+"PeakDebug.txt").c_str());
+	ifstream inFile (string(fileName).c_str());
 	Peak peak;
 	string line;
 	int ii = 0;
@@ -80,16 +80,19 @@ vector<Peak> IOhandler::readPeaks(long windowSize){
 		ss>>peak.lpValue;
 		ss>>peak.betaAlt;
 		ss>>peak.isArtifact;
-		peak.pstrand = new double[2*windowSize];
-		for(int jj = 0; jj < 2*windowSize; ++jj){
-			ss>>peak.pstrand[jj];
+		peak.pstrandExtended=new double[4*windowSize];
+		peak.mstrandExtended=new double[4*windowSize];
+		peak.pstrand=&(peak.pstrandExtended[windowSize]);
+		peak.mstrand=&(peak.mstrandExtended[windowSize]);
+		for(int jj = 0; jj < 4*windowSize; ++jj){
+			ss>>peak.pstrandExtended[jj];
 		}
-		peak.mstrand = new double[2*windowSize];
-		for(int jj = 0; jj < 2*windowSize; ++jj){
-			ss>>peak.mstrand[jj];
+		for(int jj = 0; jj < 4*windowSize; ++jj){
+			ss>>peak.mstrandExtended[jj];
 		}
 		long numLocalPeaks;
 		ss>>numLocalPeaks;
+		peak.localPeakPos.clear();
 		for(int jj = 0; jj < numLocalPeaks; ++jj){
 			long localPeakPos;
 			ss>>localPeakPos;

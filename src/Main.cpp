@@ -44,16 +44,19 @@ int main(int argc, char *argv[]){
 
 	//calculate filter shape
 	if(parms.getFilterFile()==0){
-		if(parms.getTRAINFile()==0)
-			ritornello.estimateTrainingPeaks();
-		else
-			ritornello.readTrainingPeaksFromFile();
+		ritornello.estimateTrainingPeaks();
 		ritornello.calculateFIR();
 	}
 	else
 		ritornello.readFIRFromFile();
 
-	ritornello.findPeaks(1.0);
+	if(parms.getTRAINFile()==0){
+		ritornello.findPeaks(1.0);
+		ritornello.savePeaks();
+	}
+	else
+		ritornello.readTrainingPeaksFromFile();
+
 	//test for peaks
 	ritornello.testPeakProjections(1.0);
 	//write peaks to file

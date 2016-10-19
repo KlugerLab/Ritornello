@@ -39,6 +39,7 @@ public:
 	void calcWindowReadCountDist();
 	void FDRcorrect();
 	void findPeaks(double peakThresholdRatio);
+	void savePeaks();
 private:
 	long _getPeakNumber(double* array);
 	Config parms;

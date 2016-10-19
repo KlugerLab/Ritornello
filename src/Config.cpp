@@ -91,12 +91,10 @@ int Config::parseCmdLine(int argc, char* argv[]){
 	if(FLDFile!=NULL){
 		fprintf(stderr, "Reading FLD from file [%s]\n", FLDFile);
 	}
-	/** deprecated
 	TRAINFile = _getOption(argv, argv + argc, "--TRAIN-file");
 	if(TRAINFile!=NULL){
 		fprintf(stderr, "Reading training peaks from from file [%s]\n", TRAINFile);
 	}
-	*/
 	char* NUM_THREADS_STR = _getOption(argv, argv + argc, "-p");
 	if(NUM_THREADS_STR){
 		numThreads = atoi(NUM_THREADS_STR);

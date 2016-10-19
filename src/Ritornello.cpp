@@ -89,12 +89,6 @@ void Ritornello::estimateTrainingPeaks(){
 	fir = FIR::calculateFilter(1.0, parms.getMaxFragmentLength(), fld);
 
 	findPeaks(2.0);
-//	//remove local peaks
-//	for(long ii =0; ii < (long)peaks.data.size(); ++ii){
-//		//add the current peak
-//		peaks.data[ii].localPeaks.clear();
-//		peaks.data[ii].localPeaks.push_back(parms.getMaxFragmentLength());
-//	}
 
 	//calculate peaks based on this guess
 	testPeakProjections(1.0);
@@ -106,13 +100,15 @@ void Ritornello::estimateTrainingPeaks(){
 	std::sort (peaks.data.begin(), peaks.data.end(), compareBetaAlt);
 	fprintf(stderr, "Sorting by pvalue\n");
 	std::sort (peaks.data.begin(), peaks.data.end(), comparepValue);
-	//print out training peaks
+}
+
+void Ritornello::savePeaks(){
+	//print out peaks
 	IOhandler::debugPeaks(parms.getMaxFragmentLength(), peaks);
 }
 
 void Ritornello::readTrainingPeaksFromFile(){
-	peaks.data = IOhandler::readPeaks(parms.getMaxFragmentLength());
-	IOhandler::printDoubleArrayToFile(peaks.data[0].pstrand,2*parms.getMaxFragmentLength(),"ps.txt");
+	peaks.data = IOhandler::readPeaks(parms.getMaxFragmentLength(), parms.getTRAINFile());
 	peaks.windowSize = parms.getMaxFragmentLength();
 }
 
