@@ -69,6 +69,8 @@ void IOhandler::debugPeaks(long windowSize, const Peaks& peaks){
 vector<Peak> IOhandler::readPeaks(long windowSize, const char* fileName){
 	vector<Peak> peaks;
 	ifstream inFile (string(fileName).c_str());
+	if(!inFile.is_open())
+		fprintf(stderr, "Failed to open candidate peaks file\n");
 	Peak peak;
 	string line;
 	int ii = 0;

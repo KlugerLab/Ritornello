@@ -96,10 +96,14 @@ inline double lPois(long k, double mu){
 	return k*log(mu) -mu -lgamma(k+1);
 }
 long PCRCorrectGenomeReader::correctedPReadsAt(long pos){
+	if(pstrand[pos] <2) return pstrand[pos];
 	//get local mean
 	double mean = 0;
-	for(int ii = pos-bandwidth/2;ii < pos+bandwidth/2;++ii){
+	for(int ii = pos-bandwidth/2;ii < pos;++ii){
 		mean += pstrand[ii];
+	}
+	for(int ii = pos+1;ii < pos+bandwidth/2 +1;++ii){
+			mean += pstrand[ii];
 	}
 	mean/=bandwidth;
 	if(lPois(pstrand[pos],mean)<log(0.01)){

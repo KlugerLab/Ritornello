@@ -167,7 +167,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 
 		if(bgr->currentChromosome<0 || bgr->getPos()+2*windowSize<0)
 			continue;
-		if(bgr->currentChromosome>1 || bgr->getPos()+2*windowSize>1000000)
+		if(bgr->currentChromosome>1 || bgr->getPos()+2*windowSize>1000000000)
 			break;
 
 #endif
