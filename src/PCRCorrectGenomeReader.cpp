@@ -8,7 +8,7 @@
 #include "PCRCorrectGenomeReader.h"
 #include <math.h>
 
-long PCRCorrectGenomeReader::bandwidth=30;
+long PCRCorrectGenomeReader::bandwidth=20;
 PCRCorrectGenomeReader::PCRCorrectGenomeReader(long argWindowSize)
 :BufferedGenomeReader(argWindowSize+2*bandwidth){
 	_pstrandReadsCorrected = 0;
@@ -96,6 +96,7 @@ inline double lPois(long k, double mu){
 	return k*log(mu) -mu -lgamma(k+1);
 }
 long PCRCorrectGenomeReader::correctedPReadsAt(long pos){
+	//No need to correct if there is only 1 or 0 reads
 	if(pstrand[pos] <2) return pstrand[pos];
 	//get local mean
 	double mean = 0;
@@ -103,25 +104,30 @@ long PCRCorrectGenomeReader::correctedPReadsAt(long pos){
 		mean += pstrand[ii];
 	}
 	for(int ii = pos+1;ii < pos+bandwidth/2 +1;++ii){
-			mean += pstrand[ii];
+		mean += pstrand[ii];
 	}
 	mean/=bandwidth;
-	if(lPois(pstrand[pos],mean)<log(0.01)){
-		return (int)ceil(mean);
+	if(pstrand[pos] > mean && lPois(pstrand[pos],mean)<log(0.01)){
+		return max((int)ceil(mean),1);
 	}
 	else{
 		return pstrand[pos];
 	}
 }
 long PCRCorrectGenomeReader::correctedMReadsAt(long pos){
+	//No need to correct if there is only 1 or 0 reads
+	if(mstrand[pos] <2) return mstrand[pos];
 	//get local mean
 	double mean = 0;
-	for(int ii = pos-bandwidth/2;ii < pos+bandwidth/2;++ii){
+	for(int ii = pos-bandwidth/2;ii < pos;++ii){
+		mean += mstrand[ii];
+	}
+	for(int ii = pos+1;ii < pos+bandwidth/2 +1;++ii){
 		mean += mstrand[ii];
 	}
 	mean/=bandwidth;
-	if(lPois(mstrand[pos],mean)<log(0.01)){
-		return (int)ceil(mean);
+	if(mstrand[pos] > mean && lPois(mstrand[pos],mean)<log(0.01)){
+		return max((int)ceil(mean),1);
 	}
 	else{
 		return mstrand[pos];
