@@ -172,7 +172,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 
 #endif
 		//first apply read count threshold
-		if(bgr->getPstrandReads()+bgr->getMstrandReads()<minReadsThreshold){
+		if(bgr->getPstrandReads()<minReadsThreshold/2.0 || bgr->getMstrandReads()<minReadsThreshold/2.0){
 			previousFilterDerivative = -1;
 			continue;
 		}

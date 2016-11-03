@@ -138,7 +138,7 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 		likelihoodRatioTest[ii] = new LikelihoodRatioTest(parms.getMaxFragmentLength(),fir, fld,parms.getModelOpenChromatinEffect());
 	}
 
-	Artifact::init();
+	//Artifact::init();
 
 	omp_lock_t writelock;
 	omp_init_lock(&writelock);
@@ -191,7 +191,7 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 	for(int ii = 0; ii < parms.getNumThreads(); ++ii){
 		delete likelihoodRatioTest[ii];
 	}
-	Artifact::destroy();
+	//Artifact::destroy();
 
 	//count artifacts and candidate peaks
 	long numArtifacts = 0;
