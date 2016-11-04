@@ -10,6 +10,9 @@
 #include <math.h>
 #include "IOhandler.h"
 #include <algorithm>
+#include "FFTHandler.h"
+
+#define FOURIERLENGTH 512
 
 Artifact::Artifact() {
 	// TODO Auto-generated constructor stub
@@ -18,6 +21,13 @@ Artifact::Artifact() {
 
 Artifact::~Artifact() {
 	// TODO Auto-generated destructor stub
+}
+
+void Artifact::init(){
+	FFTHandler::init(2*FOURIERLENGTH);
+}
+void Artifact::destroy(){
+	FFTHandler::destroy();
 }
 
 struct coverage{
@@ -159,38 +169,83 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 	//double logitScore = -0.3208*artifactScore+0.2985*peakScore+-0.1135*artifactScoreNonBin+0.1200*peakScoreNonBin;
 	double logitScore = 17.871*peakScore/artifactScore+6.035*peakScoreNonBin/artifactScoreNonBin + -25.179;
 	logitScore = 1/(1+exp(-logitScore));
+	if(logitScore < 0.5){
+		return logitScore;
+	}
+
+	double multiArtifactScore = multiArtifactTest(windowSize, readLength, fir, candidate, testRatio, halfLength);
+	return logitScore*multiArtifactScore;
+}
+
+//returns 0 if this is an artifact, 1 otherwise
+double Artifact::multiArtifactTest(long windowSize, long readLength, double* fir, Peak candidate, double testRatio, long halfLength){
+	//Reserve storage for positive and negative strands
+	double* ps = FFTHandler::newArray();
+	double* ms = FFTHandler::newArray();
+
+	//copy and shift by read length
+	for(int ii = 0; ii < FOURIERLENGTH+readLength; ++ii){
+		//TODO revisit this.  It may be better to just enforce larger windows
+		long pind = 2*windowSize-FOURIERLENGTH/2 + ii;//- readLength;
+		long mind = 2*windowSize-FOURIERLENGTH/2 + ii;
+		if(pind >= 0 && pind < 4*windowSize)
+			ps[ii]=candidate.pstrandExtended[pind];
+		else
+			ps[ii]=0;
+		if(mind >= 0 && mind < 4*windowSize)
+			ms[ii]=candidate.mstrandExtended[mind];
+		else
+			ms[ii]=0;
+	}
+	for(int ii = FOURIERLENGTH+readLength; ii < 2*FOURIERLENGTH; ++ii){
+		ps[ii]=0;
+		ms[ii]=0;
+	}
+
+	//IOhandler::printDoubleArrayToFile(ps,2*FOURIERLENGTH,"ps.txt");
+	//IOhandler::printDoubleArrayToFile(ms,2*FOURIERLENGTH,"ms.txt");
+
+	//set up filters
+	double* psFilter = FFTHandler::newArray();
+	double* msFilter = FFTHandler::newArray();
+	double* nullFilter = FFTHandler::newArray();
+	for(int ii = 0; ii < 2*FOURIERLENGTH; ++ii){
+		psFilter[ii]=0;
+		psFilter[ii]=0;
+		nullFilter[ii]=0;
+		if(ii >= FOURIERLENGTH && ii < (FOURIERLENGTH+readLength))
+			psFilter[ii]=1/sqrt(2*readLength);
+		if(ii >= (FOURIERLENGTH-readLength) && ii < FOURIERLENGTH)
+			msFilter[ii]=1/sqrt(2*readLength);
+		if(ii >= (FOURIERLENGTH-2*readLength) && ii < (FOURIERLENGTH+2*readLength))
+			nullFilter[ii]=1/sqrt(4*readLength);
+	}
+
+	//calculate the cross correlation
+	FFTHandler::inPlaceConvolve(psFilter, ps);
+	FFTHandler::inPlaceConvolve(msFilter, ms);
+	FFTHandler::inPlaceConvolve(ps, nullFilter);
+	FFTHandler::inPlaceConvolve(ms, nullFilter);
+
+	double ratio[2*FOURIERLENGTH];
+	for(long ii=0;ii<2*FOURIERLENGTH;++ii)
+		ratio[ii]= (psFilter[ii]+msFilter[ii]+1)/(ps[ii]+ms[ii]+1);
+
+	FFTHandler::freeArray(ps);
+	FFTHandler::freeArray(ms);
+	FFTHandler::freeArray(psFilter);
+	FFTHandler::freeArray(msFilter);
+	FFTHandler::freeArray(nullFilter);
+
+	double feature = 0;
+	for(long ii=0;ii<2*FOURIERLENGTH;++ii)
+			if(ratio[ii]>feature)
+				feature = ratio[ii];
+
+	double activation = 2.324354-27.916630*log(feature);
+
+	//apply logit function
+	double logitScore = 1/(1+exp(-activation));
+	// return sigmoid activation
 	return logitScore;
-//	if(artifactScore <= 100 &&
-//			(testRatio*artifactScore >= peakScore ||
-//			testRatio*artifactScoreNonBin >= 2*peakScoreNonBin))
-//		return true;
-//
-//	if(artifactScore > 100 &&
-//			(testRatio*artifactScore >= peakScore &&
-//			testRatio*artifactScoreNonBin >= peakScoreNonBin))
-//		return true;
-
-
-
-
-	//cauchy swarz test
-//	double artifactScore = 0;
-//
-//	for(long ii =readLength/2; ii < 2*windowSize-readLength/2; ++ii){
-//		artifactScore+=smoothedPstrand[ii-readLength/2]*smoothedMstrand[ii+readLength/2];
-//	}
-//
-//	double pscore=0;
-//	double mscore=0;
-//	for(long ii =0; ii < 2*windowSize; ++ii){
-//		if(ii < windowSize)
-//			pscore +=smoothedPstrand[ii]*fir[windowSize-1-ii];
-//		else
-//			mscore +=smoothedMstrand[ii]*fir[ii-windowSize];
-//	}
-//	//if it is an artifact
-//	if(testRatio*artifactScore > pscore*mscore)
-//		return true;
-//	else
-//		return false;
 }
