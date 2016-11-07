@@ -169,12 +169,15 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 	//double logitScore = -0.3208*artifactScore+0.2985*peakScore+-0.1135*artifactScoreNonBin+0.1200*peakScoreNonBin;
 	double logitScore = 17.871*peakScore/artifactScore+6.035*peakScoreNonBin/artifactScoreNonBin + -25.179;
 	logitScore = 1/(1+exp(-logitScore));
+	return logitScore;
+	/*
 	if(logitScore < 0.5){
 		return logitScore;
 	}
 
 	double multiArtifactScore = multiArtifactTest(windowSize, readLength, fir, candidate, testRatio, halfLength);
 	return logitScore*multiArtifactScore;
+	*/
 }
 
 //returns 0 if this is an artifact, 1 otherwise
