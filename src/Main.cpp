@@ -7,7 +7,7 @@
 #include "Ritornello.h"
 #include "SamStream.h"
 #include "BufferedGenomeReader.h"
-
+#include "DepthGraph.h"
 using namespace std;
 /**
  * Main entry point for the program
@@ -28,6 +28,10 @@ int main(int argc, char *argv[]){
 	if(parms.getDebugFolder()){
 		IOhandler::outputFolder=parms.getDebugFolder();
 	}
+
+	DepthGraph depthgraph;
+	depthgraph.Sam2DepthGraph(parms.getBamFileName(),parms.getOutputPrefix());
+	depthgraph.PCRcorrect(parms.getOutputPrefix(),20);
 
 	//initialize program
 	Ritornello ritornello(parms);

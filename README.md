@@ -19,7 +19,7 @@ install dependencies:
 
 -FFTW
 
-`sudo apt-get install fftw3-dev`
+`sudo apt-get install libfftw3-dev`
 
 -boost
 
