@@ -38,6 +38,7 @@ void DepthGraph::Sam2DepthGraph(const string& bamFileName, const string& outPref
 	//write Key file
 	ofstream keyFile((outPrefix+".RitorDepthGraphKey").c_str(),ios::out);
 	keyFile<<samstream.readLength<<endl;
+	keyFile<<samstream.genomeLength<<endl;
 	for(unsigned int ii = 0; ii < samstream.chromosomeNames.size();++ii){
 		keyFile<<samstream.chromosomeNames[ii]<<endl;samstream.chromosomeNames[ii];
 	}
@@ -148,3 +149,6 @@ void DepthGraph::PCRcorrect(const string& outPrefix, int bandwidth){
 	fprintf(stderr, "Finished PCR correcting depth graph\n");
 }
 
+void open(const string& outPrefix){
+
+}
