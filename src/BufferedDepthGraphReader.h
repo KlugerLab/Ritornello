@@ -12,13 +12,14 @@
 #include <string>
 #include <queue>
 #include <fstream>
+#include "DepthGraph.h"
 using namespace std;
 class BufferedDepthGraphReader {
 public:
 	BufferedDepthGraphReader(long argWindowSize);
 	virtual ~BufferedDepthGraphReader();
 	virtual void close();
-	virtual void init(const char* samFileName);
+	virtual void init(const string& outPrefix);
 	virtual int next();
 	virtual long getPos();
 	virtual double* getPstrand();
@@ -37,7 +38,7 @@ protected:
 	long currentStartPosition;
 	double* pstrandBuffer;
 	double* mstrandBuffer;
-	ifstream DepthGraphFile;
+	DepthGraph dg;
 	bool additionalReads;
 	double* pstrand;
 	double* mstrand;

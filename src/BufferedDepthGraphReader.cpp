@@ -15,6 +15,7 @@ BufferedDepthGraphReader::BufferedDepthGraphReader(long argWindowSize) {
 	mstrand=0;
 	_pstrandReads = 0;
 	_mstrandReads = 0;
+	readLength = 0;
 }
 
 BufferedDepthGraphReader::~BufferedDepthGraphReader() {
@@ -24,25 +25,14 @@ BufferedDepthGraphReader::~BufferedDepthGraphReader() {
 }
 
 void BufferedDepthGraphReader::close(){
-	DepthGraphFile.close();
+	dg.close();
 }
 
 void BufferedDepthGraphReader::init(const string& outPrefix){
 
-	//read key file info
-	ifstream DepthGraphKeyFile.open((outPrefix+".RitorDepthGraphKey").c_str(),ios::in);
-	readLength<<DepthGraphKeyFile;
-	genomeLength<<DepthGraphKeyFile;
-	//Read the header
-	chromosomeNames.clear();
-	while(!DepthGraphKeyFile.eof()){
-		string line<<DepthGraphKeyFile;
-		chromosomeNames.push_back(line);
-	}
-
 	//Read coverage from depth graph
-	DepthGraphFile.open((outPrefix+".RitorDepthGraph").c_str(),ios::in);
-	currentChromosome= samstream.currentChromosome;
+	dg.open(outPrefix);
+	currentChromosome= dg.currentChromosome;
 	currentStartPosition = -1;
 
 	pstrandBuffer = new double[2*windowSize];
@@ -89,12 +79,12 @@ int BufferedDepthGraphReader::next(){
 	//if the strands are both empty
 	if(_pstrandReads ==0 && _mstrandReads==0){
 		//if we have no further reads we are done
-		if(!samstream.hasNext()) return 0;
+		if(!dg.hasNext()) return 0;
 
 		//otherwise skip to the next reads chromosome
-		currentChromosome = samstream.currentChromosome;
+		currentChromosome = dg.currentChromosome;
 		//and a windowSize before its position
-		currentStartPosition = max((long)0,samstream.currentPosition-windowSize+1);
+		currentStartPosition = max((long)0,dg.currentPosition-windowSize+1);
 		onChrChange();
 	}
 	// else increment the buffer
@@ -103,15 +93,15 @@ int BufferedDepthGraphReader::next(){
 	}
 
 	//fill in any reads that should be in this window
-	while(samstream.hasNext()
-			&& samstream.currentChromosome==currentChromosome
-			&& samstream.currentPosition < currentStartPosition+windowSize
+	while(dg.hasNext()
+			&& dg.currentChromosome==currentChromosome
+			&& dg.currentPosition < currentStartPosition+windowSize
 			){
-			pstrand[samstream.currentPosition-currentStartPosition]=samstream.pReads;
-			_pstrandReads+=samstream.pReads;
-			mstrand[samstream.currentPosition-currentStartPosition]=samstream.mReads;
-			_mstrandReads+=samstream.mReads;
-			samstream.next();
+			pstrand[dg.currentPosition-currentStartPosition]=dg.pReads;
+			_pstrandReads+=dg.pReads;
+			mstrand[dg.currentPosition-currentStartPosition]=dg.mReads;
+			_mstrandReads+=dg.mReads;
+			dg.next();
 	}
 	return 1;
 }

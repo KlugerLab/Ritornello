@@ -8,7 +8,6 @@
 #include "DepthGraph.h"
 #include "BufferedGenomeReader.h"
 #include "SamStream.h"
-#include <fstream>
 #include <deque>
 #include <math.h>
 
@@ -21,13 +20,7 @@ DepthGraph::~DepthGraph() {
 	// TODO Auto-generated destructor stub
 }
 
-//position with coverage
-struct position{
-	unsigned char chr;
-	unsigned short preads;
-	unsigned short mreads;
-	long pos;
-};
+
 void DepthGraph::Sam2DepthGraph(const string& bamFileName, const string& outPrefix){
 	fprintf(stderr, "Converting sam file to depth graph\n");
 	//open the sam file
@@ -149,6 +142,45 @@ void DepthGraph::PCRcorrect(const string& outPrefix, int bandwidth){
 	fprintf(stderr, "Finished PCR correcting depth graph\n");
 }
 
-void open(const string& outPrefix){
+void DepthGraph::open(const string& outPrefix){
+	//read key file information
+	ifstream DepthGraphKeyFile;
+	DepthGraphKeyFile.open((outPrefix+".RitorDepthGraphKey").c_str(),ios::in);
+	DepthGraphKeyFile>>readLength;
+	DepthGraphKeyFile>>genomeLength;
+	//Read the header
+	chromosomeNames.clear();
+	while(!DepthGraphKeyFile.eof()){
+		string line;
+		DepthGraphKeyFile>>line;
+		chromosomeNames.push_back(line);
+	}
+	DepthGraphKeyFile.close();
 
+	//open file
+	//FIXME switch this back after debugging
+	//depthFile.open((outPrefix+"-PCRCorrect.RitorDepthGraph").c_str(), ios::in | ios::binary);
+	depthFile.open((outPrefix+".RitorDepthGraph").c_str(), ios::in | ios::binary);
+	if (!depthFile) {
+		// An error occurred!
+		throw "Could not open depth file";
+	}
+	next();
+}
+
+void DepthGraph::close(){
+	depthFile.close();
+}
+
+int DepthGraph::next(){
+	//seed a new position to the buffer
+	depthFile.read((char*)(&positionBuffer), sizeof(positionBuffer));
+	currentChromosome = positionBuffer.chr;
+	currentPosition = positionBuffer.pos;
+	pReads = positionBuffer.preads;
+	mReads = positionBuffer.mreads;
+	return 1;
+}
+bool DepthGraph::hasNext(){
+	return !depthFile.eof();
 }
