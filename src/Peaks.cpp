@@ -6,12 +6,11 @@
  */
 
 #include "Peaks.h"
-#include "BufferedGenomeReader.h"
+#include "BufferedDepthGraphReader.h"
 #include <float.h>
 #include <math.h>
 #include "IOhandler.h"
 #include "FFTHandler.h"
-#include "PCRCorrectGenomeReader.h"
 
 Peaks::Peaks() {
 }
@@ -138,12 +137,9 @@ double* createGuassianDerivativeFIRM(int windowSize, double* fir, double sd){
 void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakThreshold, long minReadsThreshold, bool correctPCR){
 	windowSize=argWindowSize;
 
-	BufferedGenomeReader* bgr;
-	if(correctPCR)
-		bgr = new PCRCorrectGenomeReader(4*windowSize);
-	else
-		bgr = new BufferedGenomeReader(4*windowSize);
-	bgr->init(bamFileName);
+	BufferedDepthGraphReader* bgr;
+	bgr = new BufferedDepthGraphReader(4*windowSize);
+	bgr->init();
 
 	//set up Gaussian derivative filter
 	//double sd = ((double)getHalfLength(windowSize, fir))/4.0;

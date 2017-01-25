@@ -11,6 +11,7 @@
 #include <deque>
 #include <math.h>
 
+string DepthGraph::outPrefix;
 DepthGraph::DepthGraph() {
 	// TODO Auto-generated constructor stub
 
@@ -21,7 +22,7 @@ DepthGraph::~DepthGraph() {
 }
 
 
-void DepthGraph::Sam2DepthGraph(const string& bamFileName, const string& outPrefix){
+void DepthGraph::Sam2DepthGraph(const string& bamFileName){
 	fprintf(stderr, "Converting sam file to depth graph\n");
 	//open the sam file
 	SamStream samstream;
@@ -61,7 +62,7 @@ inline double lPois(long k, double mu){
 	return k*log(mu) -mu -lgamma(k+1);
 }
 //PCR correct the depth file and output a new depth file
-void DepthGraph::PCRcorrect(const string& outPrefix, int bandwidth){
+void DepthGraph::PCRcorrect(int bandwidth){
 	fprintf(stderr, "PCR correcting depth graph\n");
 	deque<position> window;
 	unsigned int ind=0;
@@ -142,7 +143,7 @@ void DepthGraph::PCRcorrect(const string& outPrefix, int bandwidth){
 	fprintf(stderr, "Finished PCR correcting depth graph\n");
 }
 
-void DepthGraph::open(const string& outPrefix){
+void DepthGraph::open(){
 	//read key file information
 	ifstream DepthGraphKeyFile;
 	DepthGraphKeyFile.open((outPrefix+".RitorDepthGraphKey").c_str(),ios::in);
@@ -159,8 +160,8 @@ void DepthGraph::open(const string& outPrefix){
 
 	//open file
 	//FIXME switch this back after debugging
-	//depthFile.open((outPrefix+"-PCRCorrect.RitorDepthGraph").c_str(), ios::in | ios::binary);
-	depthFile.open((outPrefix+".RitorDepthGraph").c_str(), ios::in | ios::binary);
+	depthFile.open((outPrefix+"-PCRCorrect.RitorDepthGraph").c_str(), ios::in | ios::binary);
+	//depthFile.open((outPrefix+".RitorDepthGraph").c_str(), ios::in | ios::binary);
 	if (!depthFile) {
 		// An error occurred!
 		throw "Could not open depth file";

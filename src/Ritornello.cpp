@@ -6,7 +6,7 @@
  */
 
 #include "Ritornello.h"
-#include "BufferedGenomeReader.h"
+#include "BufferedDepthGraphReader.h"
 #include "FLD.h"
 #include "FIR.h"
 #include "Artifact.h"
@@ -14,7 +14,6 @@
 #include <float.h>
 #include <omp.h>
 
-#include "PCRCorrectGenomeReader.h"
 Ritornello::Ritornello(Config argParms) {
 	parms=argParms;
 	pstrand=NULL;
@@ -114,8 +113,8 @@ void Ritornello::readTrainingPeaksFromFile(){
 
 
 void Ritornello::testPeakProjections(double artifactTestRatio){
-	BufferedGenomeReader bgr(1);
-	bgr.init(parms.getBamFileName());
+	BufferedDepthGraphReader bgr(1);
+	bgr.init();
 	readLength = bgr.readLength;
 	genomeLength = bgr.genomeLength;
 	bgr.close();
@@ -269,8 +268,8 @@ void Ritornello::writeResults(){
 	fprintf(stderr, "Writing results to [%s]\n",filename.c_str());
 
 	//create a buffered reader to get the chromosome names
-	BufferedGenomeReader bgr(2*parms.getMaxFragmentLength());
-	bgr.init(parms.getBamFileName());
+	BufferedDepthGraphReader bgr(2*parms.getMaxFragmentLength());
+	bgr.init();
 	//open the output file
 
 	ofstream outputFile(filename.c_str());
@@ -322,14 +321,9 @@ void Ritornello::calcWindowReadCountDist(){
 #endif
 	fprintf(stderr, "Calculating median non-zero reads per window\n");
 	long windowSize = parms.getMaxFragmentLength();
-	BufferedGenomeReader* bgr;
-	if(parms.getCorrectPCR())
-		bgr = new PCRCorrectGenomeReader(2*windowSize);
-	else
-		bgr = new BufferedGenomeReader(2*windowSize);
-
-	bgr->init(parms.getBamFileName());
-
+	BufferedDepthGraphReader* bgr;
+	bgr = new BufferedDepthGraphReader(2*windowSize);
+	bgr->init();
 	while(bgr->next()){
 		//calcualate mean coverage
 		double numReads = bgr->getPstrandReads() + bgr->getMstrandReads();
@@ -342,6 +336,8 @@ void Ritornello::calcWindowReadCountDist(){
 		}
 		++windowReadCountDist[numReads];
 	}
+	bgr->close();
+	delete bgr;
 	IOhandler::printDoubleArrayToFile(&windowReadCountDist[0],windowReadCountDist.size(),"windowReadCountDist.txt");
 	//get 50 percentile for non zero read coverage
 	double sum = 0;

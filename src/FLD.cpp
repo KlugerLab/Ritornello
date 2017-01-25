@@ -11,7 +11,7 @@
 #include <math.h>
 #include "IOhandler.h"
 #include <boost/math/distributions/chi_squared.hpp>
-#include "PCRCorrectGenomeReader.h"
+#include "BufferedDepthGraphReader.h"
 
 namespace FLD{
 double* calculate(char* bamFileName, int windowSize, bool correctPCR){
@@ -78,12 +78,9 @@ double* calculateSingleEnd(char* bamFileName, int windowSize, bool correctPCR){
 		cc[ii]=0;
 		ac[ii]=0;
 	}
-	BufferedGenomeReader* bgr;
-	if(correctPCR)
-		bgr = new PCRCorrectGenomeReader(4*windowSize);
-	else
-		bgr = new BufferedGenomeReader(4*windowSize);
-	bgr->init(bamFileName);
+	BufferedDepthGraphReader* bgr;
+	bgr = new BufferedDepthGraphReader(4*windowSize);
+	bgr->init();
 	int iterations = 0;
 #ifdef DEBUG
 	while(bgr->next()){

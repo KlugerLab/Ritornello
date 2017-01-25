@@ -25,9 +25,9 @@ class DepthGraph {
 public:
 	DepthGraph();
 	virtual ~DepthGraph();
-	void Sam2DepthGraph(const string& bamFileName, const string& outPrefix);
-	void PCRcorrect(const string& outPrefix,int bandwidth);
-	void open(const string& outPrefix);
+	void Sam2DepthGraph(const string& bamFileName);
+	void PCRcorrect(int bandwidth);
+	void open();
 	void close();
 	int next();
 	bool hasNext();
@@ -39,6 +39,7 @@ public:
 	long currentPosition;
 	short pReads;
 	short mReads;
+	static string outPrefix;
 
 private:
 	ifstream depthFile;

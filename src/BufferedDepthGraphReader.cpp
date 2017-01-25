@@ -28,10 +28,14 @@ void BufferedDepthGraphReader::close(){
 	dg.close();
 }
 
-void BufferedDepthGraphReader::init(const string& outPrefix){
+void BufferedDepthGraphReader::init(){
 
 	//Read coverage from depth graph
-	dg.open(outPrefix);
+	dg.open();
+	genomeLength = dg.genomeLength;
+	//Read the header
+	chromosomeNames = dg.chromosomeNames;
+	readLength = dg.readLength;
 	currentChromosome= dg.currentChromosome;
 	currentStartPosition = -1;
 
@@ -73,6 +77,7 @@ void BufferedDepthGraphReader::incrementBuffer(){
 	++currentStartPosition;
 }
 void BufferedDepthGraphReader::onChrChange(){
+	fprintf(stderr,"Finished processing chromosome number [%ld]\n",currentChromosome);
 }
 int BufferedDepthGraphReader::next(){
 
@@ -81,11 +86,12 @@ int BufferedDepthGraphReader::next(){
 		//if we have no further reads we are done
 		if(!dg.hasNext()) return 0;
 
+		if(currentChromosome!=dg.currentChromosome)
+			onChrChange();
 		//otherwise skip to the next reads chromosome
 		currentChromosome = dg.currentChromosome;
 		//and a windowSize before its position
 		currentStartPosition = max((long)0,dg.currentPosition-windowSize+1);
-		onChrChange();
 	}
 	// else increment the buffer
 	else{

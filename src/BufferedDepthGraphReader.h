@@ -19,7 +19,7 @@ public:
 	BufferedDepthGraphReader(long argWindowSize);
 	virtual ~BufferedDepthGraphReader();
 	virtual void close();
-	virtual void init(const string& outPrefix);
+	virtual void init();
 	virtual int next();
 	virtual long getPos();
 	virtual double* getPstrand();

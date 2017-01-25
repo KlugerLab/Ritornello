@@ -7,6 +7,7 @@
 #include "Ritornello.h"
 #include "SamStream.h"
 #include "BufferedGenomeReader.h"
+#include "PCRCorrectGenomeReader.h"
 #include "BufferedDepthGraphReader.h"
 #include "DepthGraph.h"
 #include <string>
@@ -32,25 +33,35 @@ int main(int argc, char *argv[]){
 		IOhandler::outputFolder=parms.getDebugFolder();
 	}
 
+	DepthGraph::outPrefix =parms.getOutputPrefix();
 	DepthGraph depthgraph;
 	//Check if we need to convert the sam to a Depth Graph
 	ifstream f1((string(parms.getOutputPrefix())+".RitorDepthGraph").c_str(),ios::in);
 	ifstream f2((string(parms.getOutputPrefix())+".RitorDepthGraphKey").c_str(),ios::in);
 	if(!f1.good()||!f2.good())
-		depthgraph.Sam2DepthGraph(parms.getBamFileName(),parms.getOutputPrefix());
+		depthgraph.Sam2DepthGraph(parms.getBamFileName());
 	ifstream f3((string(parms.getOutputPrefix())+"-PCRCorrect.RitorDepthGraph").c_str(),ios::in);
 	if(!f3.good())
-		depthgraph.PCRcorrect(parms.getOutputPrefix(),20);
+		depthgraph.PCRcorrect(20);
 	f1.close();
 	f2.close();
 	f3.close();
 
-	//create a buffered reader to get the chromosome names
-	BufferedGenomeReader bgr(1024);
-	bgr.init(parms.getBamFileName());
-	BufferedDepthGraphReader bdr(1024);
-	bdr.init(parms.getOutputPrefix());
 
+
+	/*
+	//create a buffered reader to get the chromosome names
+	//BufferedGenomeReader bgr(1024);
+	PCRCorrectGenomeReader bgr(1024);
+	bgr.init(parms.getBamFileName());
+	BufferedGenomeReader bdr(1044);
+	bdr.init(parms.getBamFileName());
+	//BufferedDepthGraphReader bdr(1024);
+	//bdr.init(parms.getOutputPrefix());
+	//for (int ii = 0; ii < 30; ++ii)
+	//	bgr.next();
+
+	int count = 0;
 	while(bdr.next()){
 		bgr.next();
 		double* bgrpstrand = bgr.getPstrand();
@@ -61,8 +72,9 @@ int main(int argc, char *argv[]){
 			if(bgrpstrand[ii] != bdrpstrand[ii] || bgrmstrand[ii] != bdrmstrand[ii])
 				fprintf(stderr,"strands not equal");
 		}
+		++count;
 	}
-
+	*/
 
 	//initialize program
 	Ritornello ritornello(parms);
