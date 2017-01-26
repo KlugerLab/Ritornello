@@ -38,16 +38,15 @@ int main(int argc, char *argv[]){
 	//Check if we need to convert the sam to a Depth Graph
 	ifstream f1((string(parms.getOutputPrefix())+".RitorDepthGraph").c_str(),ios::in);
 	ifstream f2((string(parms.getOutputPrefix())+".RitorDepthGraphKey").c_str(),ios::in);
-	if(!f1.good()||!f2.good())
-		depthgraph.Sam2DepthGraph(parms.getBamFileName());
 	ifstream f3((string(parms.getOutputPrefix())+"-PCRCorrect.RitorDepthGraph").c_str(),ios::in);
+	if((!f1.good() && !f3.good()) ||!f2.good() )
+		depthgraph.Sam2DepthGraph(parms.getBamFileName());
 	if(!f3.good())
 		depthgraph.PCRcorrect(20);
 	f1.close();
 	f2.close();
 	f3.close();
-
-
+	remove((string(parms.getOutputPrefix())+".RitorDepthGraph").c_str());
 
 	/*
 	//create a buffered reader to get the chromosome names
