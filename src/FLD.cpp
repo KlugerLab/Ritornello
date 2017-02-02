@@ -6,8 +6,8 @@
  */
 
 #include "FLD.h"
-#include "BufferedGenomeReader.h"
 #include "FFTHandler.h"
+#include <sam.h>
 #include <math.h>
 #include "IOhandler.h"
 #include <boost/math/distributions/chi_squared.hpp>

@@ -9,7 +9,6 @@
 #include "IOhandler.h"
 #include "float.h"
 #include "FFTHandler.h"
-#include "BufferedGenomeReader.h"
 #include <fstream>
 #include <string>
 #include "LikelihoodRatioTest.h"

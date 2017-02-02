@@ -6,7 +6,6 @@
  */
 
 #include "DepthGraph.h"
-#include "BufferedGenomeReader.h"
 #include "SamStream.h"
 #include <deque>
 #include <math.h>
