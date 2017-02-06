@@ -146,7 +146,6 @@ double* calculateSingleEnd(char* bamFileName, int windowSize, bool correctPCR){
 	FFTHandler::destroy();
 
 	bgr->close();
-	delete bgr;
 
 //	//find the max of areas that are supposed to be zero
 //	double maxOffset = 0;
@@ -183,6 +182,8 @@ double* calculateSingleEnd(char* bamFileName, int windowSize, bool correctPCR){
 		sum+=fld[ii];
 	for(int ii = 0; ii <windowSize; ++ii)
 		fld[ii]/=sum;
+
+	delete bgr;
 
 	//return the FLD
 	return fld;
