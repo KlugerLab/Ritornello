@@ -24,8 +24,8 @@ Peaks::~Peaks() {
 
 void Peaks::clear(){
 	for(long ii =0; ii < (long)data.size();++ii){
-		delete data[ii].pstrandExtended;
-		delete data[ii].mstrandExtended;
+		delete[] data[ii].pstrandExtended;
+		delete[] data[ii].mstrandExtended;
 	}
 	data.clear();
 }
@@ -159,6 +159,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 	fprintf(stderr, "Looking for candidate peaks\n");
 	positionsScanned=0;
 	while(bgr->next()){
+/*
 #ifdef DEBUG
 
 		if(bgr->currentChromosome<0 || bgr->getPos()+2*windowSize<0)
@@ -167,6 +168,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 			break;
 
 #endif
+*/
 		//first apply read count threshold
 		if(bgr->getPstrandReads()<minReadsThreshold/2.0 || bgr->getMstrandReads()<minReadsThreshold/2.0){
 			previousFilterDerivative = -1;
@@ -196,8 +198,8 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 	}
 	bgr->close();
 	delete bgr;
-	delete derivativeFIRP;
-	delete derivativeFIRM;
+	delete[] derivativeFIRP;
+	delete[] derivativeFIRM;
 	findPeakNeighbors();
 	fprintf(stderr, "[%ld] candidate peaks found from local maxima after scanning [%ld] positions\n",data.size(), positionsScanned);
 }

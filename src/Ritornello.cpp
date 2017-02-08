@@ -91,7 +91,7 @@ void Ritornello::estimateTrainingPeaks(){
 
 	//calculate peaks based on this guess
 	testPeakProjections(1.0);
-	delete fir;
+	delete[] fir;
 
 	//remove artifacts
 	removeArtifacts();
@@ -184,6 +184,11 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 			peaks.data[ii].lpValueOpenChromatin = likelihoodRatioTest[tid]->lpValueOpenChromatin;
 			peaks.data[ii].betaAlt = likelihoodRatioTest[tid]->peakReads;
 		}
+		else {
+			peaks.data[ii].lpValue = 0;
+			peaks.data[ii].lpValueOpenChromatin = 0;
+			peaks.data[ii].betaAlt = 0;
+		}
 	}
 	fprintf(stderr, "\n");
 	//delete all test objects
@@ -215,9 +220,10 @@ void Ritornello::FDRcorrect(){
 	fprintf(stderr, "Applying Benjamini Hochberg\n");
 	int rank = 1;
 	for(long ii =0; ii < (long)peaks.data.size();++ii){
-		if(peaks.data[ii].isArtifact)
+		if(peaks.data[ii].isArtifact){
+			peaks.data[ii].lqValue=0;
 			continue;
-			//peaks.data[ii].lqValue = peaks.data[ii].lpValue - log10((long)peaks.data.size()/rank);
+		}
 		peaks.data[ii].lqValue = peaks.data[ii].lpValue - log10((double)peaks.positionsScanned/(double)rank);
 		++rank;
 	}
@@ -258,8 +264,8 @@ bool predicate(Peak peak){
 void Ritornello::removeArtifacts(){
 	for(vector<Peak>::iterator iter = peaks.data.begin(); iter != peaks.data.end(); ++iter)
 		if(iter->isArtifact){
-			delete iter->pstrandExtended;
-			delete iter->mstrandExtended;
+			delete[] iter->pstrandExtended;
+			delete[] iter->mstrandExtended;
 		}
 	peaks.data.erase(std::remove_if(peaks.data.begin(), peaks.data.end(), predicate), peaks.data.end());
 }
@@ -314,11 +320,13 @@ void Ritornello::writeResults(){
 }
 
 void Ritornello::calcWindowReadCountDist(){
+/*
 #ifdef DEBUG
 	medianWindowReadCount=10;
 	fprintf(stderr, "Set median non-zero reads per window=[%ld]\n",medianWindowReadCount);
 	return;
 #endif
+*/
 	fprintf(stderr, "Calculating median non-zero reads per window\n");
 	long windowSize = parms.getMaxFragmentLength();
 	BufferedDepthGraphReader* bgr;
