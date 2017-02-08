@@ -16,7 +16,8 @@ public:
 	static void init();
 	static void destroy();
 	static double test(long windowSize, long readLength, double* fir, Peak cadidate, double testRatio, long halfLength);
-	static double multiArtifactTest(long windowSize, long readLength, double* fir, Peak candidate, double testRatio, long halfLength);
+	static const double W[64];
+	static const double b;
 };
 
 #endif /* SRC_ARTIFACT_H_ */
