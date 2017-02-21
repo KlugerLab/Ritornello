@@ -49,10 +49,6 @@ double* calculateFilter(double parm, long windowSize, double* fld){
 double calculateAlpha(const Peaks& peaks, long windowSize, double* fld, int numThreads){
 	fprintf(stderr, "Parameterizing alpha\n");
 	int numTestPeaks=min(200, (int)peaks.data.size());
-	//number of bases on either side to test for peak center
-	//int wiggle = min(1, (int)windowSize/2);
-	//LikelihoodRatioTestNBinom* likelihoodRatioTest;
-	//LikelihoodRatioTest* likelihoodRatioTest;
 	int numNonConvergentTests = 0;
 
 	double bestAlpha=-1;
@@ -61,31 +57,18 @@ double calculateAlpha(const Peaks& peaks, long windowSize, double* fld, int numT
 	for(int ii = 9; ii < 31; ++ii){
 		double alpha = ii/10.0 +0.1;
 		double alphall = 0;
-		//get the likelihood of this parameter
-		//likelihoodRatioTest=new LikelihoodRatioTestNBinom(windowSize-wiggle,calculateFilter(alpha, windowSize, fld));
-
 		//create an array of tests 1 for each thread
 		LikelihoodRatioTest* likelihoodRatioTest[numThreads];
 		//call constructor on each
 		for(int ii = 0; ii < numThreads; ++ii){
-			//likelihoodRatioTest[ii] = new LikelihoodRatioTestNBinom(windowSize-wiggle,calculateFilter(alpha, windowSize, fld));
 			likelihoodRatioTest[ii] = new LikelihoodRatioTest(windowSize,calculateFilter(alpha, windowSize, fld), fld, false);
 		}
-		//likelihoodRatioTest=new LikelihoodRatioTest(windowSize-wiggle,calculateFilter(alpha, windowSize, fld));
 		//for each peak
 		omp_lock_t writelock;
 		omp_init_lock(&writelock);
 		#pragma omp parallel for reduction(+:alphall)
 		for(int jj = 0; jj < numTestPeaks; ++jj){
 			int tid = omp_get_thread_num();
-			//double maxll = -DBL_MAX;
-			//for each wiggle base off the center of the peak
-			//for(int kk=0; kk <= 2*wiggle; kk+=wiggle/1){
-				//Add the wiggle to the local peak positions
-//			vector<long> localPeaks;
-//			localPeaks.clear();
-//			localPeaks.push_back(windowSize);
-			//likelihoodRatioTest[tid]->test(peaks.data[jj].pstrand,peaks.data[jj].mstrand, localPeaks.size(), &localPeaks[0]);
 			int ret = likelihoodRatioTest[tid]->test(peaks.data[jj].pstrand,peaks.data[jj].mstrand,
 					peaks.data[jj].pstrandExtended,peaks.data[jj].mstrandExtended,
 					peaks.data[jj].localPeakPos.size(),&peaks.data[jj].localPeakPos[0]);
@@ -97,20 +80,8 @@ double calculateAlpha(const Peaks& peaks, long windowSize, double* fld, int numT
 				alphall=0;
 			}
 			else
-				alphall = likelihoodRatioTest[tid]->llAlt;
-//				localPeaks.push_back(windowSize-wiggle);
-//				for(long zz = 1; zz < (long)peaks.data[jj].localPeaks.size();++zz){
-//					long wigglePos = peaks.data[jj].localPeaks[zz]-wiggle;
-//					if(wigglePos >=0 && wigglePos < 2*windowSize-2*wiggle)
-//						localPeaks.push_back(wigglePos);
-//				}
-//				likelihoodRatioTest[tid]->test(peaks.data[jj].pstrand+kk,peaks.data[jj].mstrand+kk, localPeaks.size(), &localPeaks[0]);
-//				if(likelihoodRatioTest[tid]->llAlt > maxll) maxll = likelihoodRatioTest[tid]->llAlt;
-			//}
-			//add the best fit to the likelihood of the model
-			//alphall += maxll;
+				alphall += likelihoodRatioTest[tid]->llAlt;
 		}
-		//delete likelihoodRatioTest;
 		//delete all test objects
 		for(int ii = 0; ii < numThreads; ++ii){
 			delete likelihoodRatioTest[ii];

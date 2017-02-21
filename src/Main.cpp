@@ -31,6 +31,12 @@ int main(int argc, char *argv[]){
 		IOhandler::outputFolder=parms.getDebugFolder();
 	}
 
+	//Make sure we delete old files for release runs
+#ifndef DEBUG
+	remove((string(parms.getOutputPrefix())+"-PCRCorrect.RitorDepthGraph").c_str());
+	remove((string(parms.getOutputPrefix())+".RitorDepthGraphKey").c_str());
+#endif
+
 	DepthGraph::outPrefix =parms.getOutputPrefix();
 	DepthGraph depthgraph;
 	//Check if we need to convert the sam to a Depth Graph

@@ -199,8 +199,8 @@ inline double ddlPoisddMu(long k, double mu){
 }
 
 inline void LikelihoodRatioTest::constrain(UBL::vector<double>& beta, double reads){
-	static double minValB = 0.01;
-	static double maxValB = 2*reads;
+	static const double minValB = 0.01;
+	static const double maxValB = 2*reads;
 
 	//beta0
 	if(beta[0] < minValB)
