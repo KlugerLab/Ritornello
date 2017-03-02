@@ -1,1 +1,1 @@
-bsub -J "LSFRitornello[2-5]" < LSFRitornello.sh
+bsub -J "EncodeTest[1-5]" < EncodeTest.sh

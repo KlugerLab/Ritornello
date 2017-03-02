@@ -1,6 +1,6 @@
 CXXFLAGS = -Wall -fmessage-length=0
-INCLUDEPATH = -I include/ -I /usr/include/samtools/
-LIBS = -lbam -lz -lm #-lblas
+INCLUDEPATH = -I include/ -I /usr/include/samtools/ -I ~/fftw3Installation/include/ -I ~/samtools-0.1.19/
+LIBS = -L ~/samtools-0.1.19/ -L ~/fftw3Installation/lib/ -lbam -lz -lm #-lblas
 
 CPP_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(addprefix bin/,$(notdir $(CPP_FILES:.cpp=.o)))
