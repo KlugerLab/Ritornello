@@ -1,1 +1,1 @@
-bsub -J "EncodeTest[1-5]" < EncodeTest.sh
+bsub -J "EncodeTest[1-10]" < EncodeTest.sh
