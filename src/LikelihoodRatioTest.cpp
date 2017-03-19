@@ -93,7 +93,7 @@ LikelihoodRatioTest::~LikelihoodRatioTest() {
 	delete[] fld;
 }
 
-void LikelihoodRatioTest::calcDesignMatrices(int numLocalPeaks, const long* localPeaks, double* pstrandExtended, double* mstrandExtended){
+void LikelihoodRatioTest::calcDesignMatrices(int numLocalPeaks, const long* localPeaks, unsigned short* pstrandExtended, unsigned short* mstrandExtended){
 	int n = 2*maxFragmentLength;
 	//set up model
 	pFilterMat.resize(n,numLocalPeaks+1);
@@ -124,7 +124,7 @@ void LikelihoodRatioTest::calcDesignMatrices(int numLocalPeaks, const long* loca
 	tmFilterMat = UBL::trans(mFilterMat);
 }
 
-void LikelihoodRatioTest::DesignMatricesAddOpenChromatinEffect(int numLocalPeaks, const long* localPeaks, double* pstrandExtended, double* mstrandExtended){
+void LikelihoodRatioTest::DesignMatricesAddOpenChromatinEffect(int numLocalPeaks, const long* localPeaks, unsigned short* pstrandExtended, unsigned short* mstrandExtended){
 	int n = 2*maxFragmentLength;
 	//set up model
 	pFilterMat.resize(n,numLocalPeaks+2);
@@ -254,7 +254,7 @@ inline int ginv(UBL::matrix<double>& mat){
 	else
 		return -1;
 }
-double LikelihoodRatioTest::ll(double* strand, const UBL::matrix<double>& filterMat, UBL::vector<double> beta){
+double LikelihoodRatioTest::ll(unsigned short* strand, const UBL::matrix<double>& filterMat, UBL::vector<double> beta){
 	UBL::vector<double> lambda = prod(filterMat,beta);
 	double ll = 0;
 	for(long ii = 0; ii < 2*maxFragmentLength; ++ii){
@@ -263,7 +263,7 @@ double LikelihoodRatioTest::ll(double* strand, const UBL::matrix<double>& filter
 	}
 	return ll;
 }
-UBL::vector<double> LikelihoodRatioTest::gradient(double* strand, const UBL::matrix<double>& filterMat, UBL::vector<double> beta){
+UBL::vector<double> LikelihoodRatioTest::gradient(unsigned short* strand, const UBL::matrix<double>& filterMat, UBL::vector<double> beta){
 	UBL::vector<double> lambda = prod<UBL::vector<double> >(filterMat,beta);
 	UBL::vector<double> grad(2*maxFragmentLength,0.0);
 	for(long ii = 0; ii < 2*maxFragmentLength; ++ii){
@@ -272,7 +272,7 @@ UBL::vector<double> LikelihoodRatioTest::gradient(double* strand, const UBL::mat
 	grad = prod(grad,filterMat);
 	return grad;
 }
-UBL::matrix<double> LikelihoodRatioTest::hessian(double* strand, const UBL::matrix<double>& filterMat, const UBL::matrix<double>& tfilterMat, UBL::vector<double> beta){
+UBL::matrix<double> LikelihoodRatioTest::hessian(unsigned short* strand, const UBL::matrix<double>& filterMat, const UBL::matrix<double>& tfilterMat, UBL::vector<double> beta){
 	//setup up hess for return
 	UBL::matrix<double> hess(beta.size(),beta.size(),0.0);
 	UBL::vector<double> lambda = prod<UBL::vector<double> >(filterMat,beta);
@@ -289,7 +289,7 @@ UBL::matrix<double> LikelihoodRatioTest::hessian(double* strand, const UBL::matr
 	hess=prod(tfilterMat,tmp);
 	return hess;
 }
-int LikelihoodRatioTest::maximizeLL(double* strand, const UBL::matrix<double>& filterMat, const UBL::matrix<double>& tfilterMat, UBL::vector<double>& beta, double& maxll){
+int LikelihoodRatioTest::maximizeLL(unsigned short* strand, const UBL::matrix<double>& filterMat, const UBL::matrix<double>& tfilterMat, UBL::vector<double>& beta, double& maxll){
 	int convergedSteps=0;
 	double reads = 0;
 	for(long ii = 0; ii < 2*maxFragmentLength; ++ii)
@@ -352,7 +352,7 @@ int LikelihoodRatioTest::maximizeLL(double* strand, const UBL::matrix<double>& f
 	return -1;
 }
 
-int LikelihoodRatioTest::test(double* pstrand, double* mstrand,double* pstrandExtended, double* mstrandExtended, const long numLocalPeaks, const long* localPeaks){
+int LikelihoodRatioTest::test(unsigned short* pstrand, unsigned short* mstrand,unsigned short* pstrandExtended, unsigned short* mstrandExtended, const long numLocalPeaks, const long* localPeaks){
 	int converged = 0;
 	//count reads
 	double preads = 0;

@@ -26,6 +26,12 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 	long coverageSize = 2*windowSize;
 	double cc[ccLength];
 
+	//if the fragment length is too short to compare against for artifacts
+	if(2*readLength + 10 >= ccLength){
+		//dont filter artifacts
+		return 1;
+	}
+
 	//Calculate cross correlation nonbinarized nonsmoothed
 	for(int ii = 0; ii < ccLength; ++ii){
 		cc[ii]=0;
@@ -35,12 +41,12 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 	}
 	//Score1 is the read length score
 	double score1 = 0;
-	for(long ii=0;ii<readLength;++ii)
+	for(long ii=0;ii<readLength+10;++ii)
 			if(cc[ii]>score1)
 				score1 = cc[ii];
 	//Score2 is the fragment length score
 	double score2 = 0;
-	for(long ii=readLength+10;ii<ccLength;++ii)
+	for(long ii=2*readLength;ii<ccLength;++ii)
 			if(cc[ii]>score2)
 				score2 = cc[ii];
 	//Add 1 to prevent divide by zero
@@ -71,12 +77,12 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 
 	//Score3 is the read length score
 	double score3 = 0;
-	for(long ii=0;ii<readLength;++ii)
+	for(long ii=0;ii<readLength+10;++ii)
 			if(cc[ii]>score3)
 				score3 = cc[ii];
 	//Score4 is the fragment length score
 	double score4 = 0;
-	for(long ii=readLength+10;ii<ccLength;++ii)
+	for(long ii=2*readLength;ii<ccLength;++ii)
 			if(cc[ii]>score4)
 				score4 = cc[ii];
 	//Add 1 to prevent divide by zero
@@ -84,7 +90,7 @@ double Artifact::test(long windowSize, long readLength, double* fir, Peak candid
 
 	double feature1 = score1/score2;
 	double feature2 = score3/score4;
-	double activation = 48.91067+-19.45451*feature1-29.32183*feature2;
+	double activation = 17.582137+-2.678528*feature1+-13.505810*feature2;
 	//apply logit function
 	double logitScore = 1/(1+exp(-activation));
 	// return sigmoid activation

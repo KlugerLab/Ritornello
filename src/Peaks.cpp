@@ -73,8 +73,8 @@ void Peaks::addPeak(long chr, long position, double* pstrand, double* mstrand){
 	currentResult.lpValue=0;
 	currentResult.betaAlt=0;
 	currentResult.isArtifact=false;
-	currentResult.pstrandExtended=new double[4*windowSize];
-	currentResult.mstrandExtended=new double[4*windowSize];
+	currentResult.pstrandExtended=new unsigned short[4*windowSize];
+	currentResult.mstrandExtended=new unsigned short[4*windowSize];
 	currentResult.pstrand=&(currentResult.pstrandExtended[windowSize]);
 	currentResult.mstrand=&(currentResult.mstrandExtended[windowSize]);
 	for(int ii = 0;  ii < 4*windowSize; ++ii){

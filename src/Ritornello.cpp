@@ -41,6 +41,9 @@ void Ritornello::calculateMaxFragmentLength(){
 		}
 	}
 	fprintf(stderr, "Estimated maximum fragment length [%ld bp]\n", parms.getMaxFragmentLength());
+	if(2*readLength + 10 >= 0.75*parms.getMaxFragmentLength()){
+		fprintf(stderr, "Fragment length is too short relative the read length (2*readLength + 10 >= 0.75*maxfragmentlength so read length artifacts cannot be discarded\n");
+	}
 }
 
 void Ritornello::readFIRFromFile(){

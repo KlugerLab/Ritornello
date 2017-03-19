@@ -82,8 +82,8 @@ vector<Peak> IOhandler::readPeaks(long windowSize, const char* fileName){
 		ss>>peak.lpValue;
 		ss>>peak.betaAlt;
 		ss>>peak.isArtifact;
-		peak.pstrandExtended=new double[4*windowSize];
-		peak.mstrandExtended=new double[4*windowSize];
+		peak.pstrandExtended=new unsigned short[4*windowSize];
+		peak.mstrandExtended=new unsigned short[4*windowSize];
 		peak.pstrand=&(peak.pstrandExtended[windowSize]);
 		peak.mstrand=&(peak.mstrandExtended[windowSize]);
 		for(int jj = 0; jj < 4*windowSize; ++jj){

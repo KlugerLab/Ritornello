@@ -19,10 +19,10 @@ struct Peak{
 	double betaAlt;
 	bool isArtifact;
 	double artifactScore;
-	double* pstrandExtended;
-	double* mstrandExtended;
-	double* pstrand;
-	double* mstrand;
+	unsigned short* pstrandExtended;
+	unsigned short* mstrandExtended;
+	unsigned short* pstrand;
+	unsigned short* mstrand;
 	vector<long> localPeakPos;
 	vector<Peak*> localPeakPtr;
 };
