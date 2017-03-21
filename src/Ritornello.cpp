@@ -41,9 +41,6 @@ void Ritornello::calculateMaxFragmentLength(){
 		}
 	}
 	fprintf(stderr, "Estimated maximum fragment length [%ld bp]\n", parms.getMaxFragmentLength());
-	if(2*readLength + 10 >= 0.75*parms.getMaxFragmentLength()){
-		fprintf(stderr, "Fragment length is too short relative the read length (2*readLength + 10 >= 0.75*maxfragmentlength so read length artifacts cannot be discarded\n");
-	}
 }
 
 void Ritornello::readFIRFromFile(){
@@ -121,6 +118,12 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 	readLength = bgr.readLength;
 	genomeLength = bgr.genomeLength;
 	bgr.close();
+
+	if(2*readLength + 10 >= 0.75*parms.getMaxFragmentLength()){
+		fprintf(stderr, "Read length [%ld bp]\n", readLength);
+		fprintf(stderr, "Max fragment length [%ld bp]\n", parms.getMaxFragmentLength());
+		fprintf(stderr, "Max fragment length is too short relative the read length (2*readLength + 10 >= 0.75*maxfragmentlength so read length artifacts cannot be discarded\n");
+	}
 
 	int numNonConvergentTests=0;
 	//Calculate artifact test window as 50% of filter
