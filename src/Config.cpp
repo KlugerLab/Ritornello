@@ -24,11 +24,11 @@ Config::Config() {
 	//Output file
 	outputPrefix = NULL;
 	//log q-value threshold below which peaks are no longer reported
-	logQValSignifThreshold = -2.0;
+	logQValSignifThreshold = 2.0;
 	//minimum read count threshold
 	minReadThreshold = 20;
 	//signal value threshold
-	signalValueThreshold = 10;
+	signalValueThreshold = 40;
 	//model open chromatin
 	modelOpenChromatinEffect = false;
 	//Flag to turn on PCR correction

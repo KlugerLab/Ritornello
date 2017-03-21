@@ -120,34 +120,6 @@ void LikelihoodRatioTest::calcDesignMatrices(int numLocalPeaks, const long* loca
 		DesignMatricesAddOpenChromatinEffect(numLocalPeaks,localPeaks,pstrandExtended,mstrandExtended);
 	}
 
-	//TODO experimental code start
-	//get binarized smoothed cross correlation
-	//run sum Smooth and keep only unique reads (After smoothing)
-	long smoothingbandwidth = 10;
-	for(long ii = 0; ii < n; ++ii){
-		pFilterMat(ii,0)=0.01;
-		mFilterMat(ii,0)=0.01;
-		//smooth by 5 nucleotides
-		for(long jj = max((long)0,ii-smoothingbandwidth); jj <= min(ii+smoothingbandwidth,(long)n); ++jj){
-			if(pstrandExtended[maxFragmentLength+jj]!=0)
-				pFilterMat(ii,0)=1;
-			if(mstrandExtended[maxFragmentLength+jj]!=0)
-				mFilterMat(ii,0)=1;
-		}
-	}
-
-	double puSum = 0;
-	double muSum = 0;
-	for(long ii = 0; ii < 2*maxFragmentLength; ++ii){
-		puSum += pFilterMat(ii,0);
-		muSum += mFilterMat(ii,0);
-	}
-	for(long ii = 0; ii < 2*maxFragmentLength; ++ii){
-		pFilterMat(ii,0)/=puSum;
-		mFilterMat(ii,0)/=muSum;
-	}
-	//TODO experimental code end
-
 	tpFilterMat = UBL::trans(pFilterMat);
 	tmFilterMat = UBL::trans(mFilterMat);
 }
