@@ -7,7 +7,7 @@
 ii=$LSB_JOBINDEX
 cd ~
 
-FOLDER_ROOT=EncodeTest/RitornelloPeaks
+FOLDER_ROOT="EncodeTest/RitornelloPeaks3-19-2017"
 FileList=(
 'ENCFF000YVE.sorted.bam'
 'ENCFF000YTJ.sorted.bam'
