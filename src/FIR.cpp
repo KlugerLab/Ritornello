@@ -86,7 +86,7 @@ double calculateAlpha(const Peaks& peaks, long windowSize, double* fld, int numT
 		for(int ii = 0; ii < numThreads; ++ii){
 			delete likelihoodRatioTest[ii];
 		}
-		fprintf(stderr, "Alpha parameter [%f] gave likelihood [%f]\n", alpha, alphall);
+		//fprintf(stderr, "Alpha parameter [%f] gave likelihood [%f]\n", alpha, alphall);
 		if(alphall>bestAlphall){
 			bestAlphall = alphall;
 			bestAlpha=alpha;
@@ -94,7 +94,7 @@ double calculateAlpha(const Peaks& peaks, long windowSize, double* fld, int numT
 	}
 
 	fprintf(stderr, "Best alpha parameter is [%f]\n", bestAlpha);
-	fprintf(stderr, "Non-convergent likelihood tests[%d]\n", numNonConvergentTests);
+	//fprintf(stderr, "Non-convergent likelihood tests[%d]\n", numNonConvergentTests);
 	return bestAlpha;
 }
 

@@ -22,7 +22,7 @@ void FFTHandler::init(long arg_n){
 //#endif
 	n = arg_n;
 	leased=0;
-	fprintf(stderr, "Initializing fft plan of size [%ld]\n", n);
+	//fprintf(stderr, "Initializing fft plan of size [%ld]\n", n);
 	memoryPool.resize(1);
 	memoryPool[0] = (double*)fftw_malloc(sizeof(double)*2*(n/2+1));
 	fftForwardPlan = fftw_plan_dft_r2c_1d(n, memoryPool[0], (fftw_complex*)memoryPool[0],FFTW_MEASURE);

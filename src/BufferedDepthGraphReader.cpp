@@ -7,7 +7,7 @@
 
 #include "BufferedDepthGraphReader.h"
 
-BufferedDepthGraphReader::BufferedDepthGraphReader(long argWindowSize) {
+BufferedDepthGraphReader::BufferedDepthGraphReader(long argWindowSize, bool suppressMessages) {
 	windowSize = argWindowSize;
 	pstrandBuffer = 0;
 	mstrandBuffer = 0;
@@ -16,15 +16,19 @@ BufferedDepthGraphReader::BufferedDepthGraphReader(long argWindowSize) {
 	_pstrandReads = 0;
 	_mstrandReads = 0;
 	readLength = 0;
+	_suppressMessages = suppressMessages;
 }
 
 BufferedDepthGraphReader::~BufferedDepthGraphReader() {
-	fprintf(stderr, "cleaning up buffered reader\n");
+	//fprintf(stderr, "cleaning up buffered reader\n");
 	delete[] pstrandBuffer;
 	delete[] mstrandBuffer;
 }
 
 void BufferedDepthGraphReader::close(){
+	if(!_suppressMessages){
+		fprintf(stderr, "\n");
+	}
 	dg.close();
 }
 
@@ -46,6 +50,15 @@ void BufferedDepthGraphReader::init(){
 	for(long ii = 0; ii < windowSize; ++ii){
 		pstrand[ii]=0;
 		mstrand[ii]=0;
+	}
+	if(!_suppressMessages){
+		fprintf(stderr, "Scanning genome\n");
+		fprintf(stderr, "|");
+		for(unsigned int kk = 0; kk < chromosomeNames.size()-2; ++kk){
+			fprintf(stderr, "-");
+		}
+		fprintf(stderr, "|\n");
+		fprintf(stderr, "*");
 	}
 }
 
@@ -77,7 +90,10 @@ void BufferedDepthGraphReader::incrementBuffer(){
 	++currentStartPosition;
 }
 void BufferedDepthGraphReader::onChrChange(){
-	fprintf(stderr,"Finished processing chromosome number [%ld]\n",currentChromosome);
+	//fprintf(stderr,"Finished scanning chromosome number [%s]\n",chromosomeNames[currentChromosome].c_str());
+	if(!_suppressMessages){
+		fprintf(stderr, "*");
+	}
 }
 int BufferedDepthGraphReader::next(){
 

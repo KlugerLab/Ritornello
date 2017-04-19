@@ -137,6 +137,8 @@ double* createGuassianDerivativeFIRM(int windowSize, double* fir, double sd){
 void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakThreshold, long minReadsThreshold, bool correctPCR){
 	windowSize=argWindowSize;
 
+	fprintf(stderr, "Looking for candidate peaks\n");
+
 	BufferedDepthGraphReader* bgr;
 	bgr = new BufferedDepthGraphReader(4*windowSize);
 	bgr->init();
@@ -145,7 +147,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 	//double sd = ((double)getHalfLength(windowSize, fir))/4.0;
 	double sd = 10;
 
-	fprintf(stderr, "Prepping filter derivatives\n");
+	//fprintf(stderr, "Prepping filter derivatives\n");
 	double* derivativeFIRP =createGuassianDerivativeFIRP(windowSize, fir, sd);
 	double* derivativeFIRM =createGuassianDerivativeFIRM(windowSize, fir, sd);
 	//IOhandler::printDoubleArrayToFile(derivativeFIRP,2*windowSize,"gdp.txt");
@@ -156,7 +158,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 	double currentFilterDerivative = -1;
 	// for reporting
 	double previousChromosome = -1;
-	fprintf(stderr, "Looking for candidate peaks\n");
+
 	positionsScanned=0;
 	while(bgr->next()){
 /*
@@ -178,7 +180,7 @@ void Peaks::find(char* bamFileName, int argWindowSize, double* fir, double peakT
 		++positionsScanned;
 		//report progress
 		if(bgr->currentChromosome!=previousChromosome && bgr->currentChromosome>=0 && bgr->currentChromosome < (int)bgr->chromosomeNames.size()){
-			fprintf(stderr, "Searching chromosome [%s]\n",bgr->chromosomeNames[bgr->currentChromosome].c_str());
+			//fprintf(stderr, "Searching chromosome [%s]\n",bgr->chromosomeNames[bgr->currentChromosome].c_str());
 		}
 		previousChromosome = bgr->currentChromosome;
 		//get the filter derivative

@@ -16,7 +16,7 @@
 using namespace std;
 class BufferedDepthGraphReader {
 public:
-	BufferedDepthGraphReader(long argWindowSize);
+	BufferedDepthGraphReader(long argWindowSize, bool suppressMessages=false);
 	virtual ~BufferedDepthGraphReader();
 	virtual void close();
 	virtual void init();
@@ -44,6 +44,7 @@ protected:
 	double* mstrand;
 	long _pstrandReads;
 	long _mstrandReads;
+	bool _suppressMessages;
 };
 
 #endif /* BUFFEREDDEPTHGRAPHREADER_H_ */

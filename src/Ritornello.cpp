@@ -113,7 +113,7 @@ void Ritornello::readTrainingPeaksFromFile(){
 
 
 void Ritornello::testPeakProjections(double artifactTestRatio){
-	BufferedDepthGraphReader bgr(1);
+	BufferedDepthGraphReader bgr(1,true);
 	bgr.init();
 	readLength = bgr.readLength;
 	genomeLength = bgr.genomeLength;
@@ -122,7 +122,7 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 	if(2*readLength + 10 >= 0.75*parms.getMaxFragmentLength()){
 		fprintf(stderr, "Read length [%ld bp]\n", readLength);
 		fprintf(stderr, "Max fragment length [%ld bp]\n", parms.getMaxFragmentLength());
-		fprintf(stderr, "Max fragment length is too short relative the read length (2*readLength + 10 >= 0.75*maxfragmentlength so read length artifacts cannot be discarded\n");
+		fprintf(stderr, "Max fragment length is short relative the read length (2*readLength + 10 >= 0.75*maxfragmentlength so read length artifacts will be discarded using the fallback classifier\n");
 	}
 
 	int numNonConvergentTests=0;
@@ -278,7 +278,7 @@ void Ritornello::writeResults(){
 	fprintf(stderr, "Writing results to [%s]\n",filename.c_str());
 
 	//create a buffered reader to get the chromosome names
-	BufferedDepthGraphReader bgr(2*parms.getMaxFragmentLength());
+	BufferedDepthGraphReader bgr(2*parms.getMaxFragmentLength(),true);
 	bgr.init();
 	//open the output file
 
