@@ -187,7 +187,7 @@ void LikelihoodRatioTest::DesignMatricesAddOpenChromatinEffect(int numLocalPeaks
 
 //log Poisson distribution pdf
 inline double lPois(long k, double mu){
-	return k*log(mu) -mu -lgamma(k+1);
+	return k*log(mu) -mu -boost::math::lgamma(k+1);
 }
 //first partial with respect to m
 inline double dlPoisdMu(long k, double mu){
