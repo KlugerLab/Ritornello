@@ -27,10 +27,12 @@ public:
 	char* getTRAINFile();
 	bool getModelOpenChromatinEffect();
 	bool getCorrectPCR();
+	bool getHandleArtifacts();
 	int getNumThreads();
 	double getMinReadThreshold();
 	double getSignalValueThreshold();
 	double getLogQValSignifThreshold();
+
 	void setBamFileName(char* argBamFileName);
 	void setPeakThreshold(double argPeakThreshold);
 	void setMaxFragmentLength(long argMaxFragmentLength);
@@ -72,6 +74,8 @@ private:
 	bool modelOpenChromatinEffect;
 	//flag to turn on PCR correction
 	bool correctPCR;
+	//flag to turn on artifact handling.  on by default.
+	bool handleArtifacts;
 };
 
 #endif /* CONFIG_H_ */

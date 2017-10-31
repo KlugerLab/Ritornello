@@ -38,7 +38,7 @@ Compile:
 The executable is then made at `bin/Ritornello`.
 You can move it where ever you like and/or add it to your path, or simply run it from its bin location.
 
-#Creating a sorted bam file:
+# Creating a sorted bam file:
 
 This tutorial assumes the user starts with sequenced ChIP-seq reads in the fastq format, `MyFile.fastq` for singled end or `MyFile_1.fastq` and `MyFile_2.fastq` for paired-end.
 
@@ -68,14 +68,14 @@ Indexing the bam file is useful so that it can be used with other tools such as 
 
 This will create an index `MySortedBamFile.bam.bai` file in the same directory
 
-#Using Ritornello:
+# Using Ritornello:
 -basic usage
 
 `./Ritornello --Correct-PCR -f MySortedBamFile.bam `
 
 Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools.  We recommend the --Correct-PCR option unless you are fairly certain that PCR amplification bias wont be an issue.  This option does increase runtime however.
 
-#Analyzing the output:
+# Analyzing the output:
 
 The output is printed to `MySortedBamFile.bam-peakSummary.narrowPeak` where `MySortedBamFile.bam` is replaced with the output prefix if the `-o` option is specified.  The output is a [narrowPeak](https://genome.ucsc.edu/FAQ/FAQformat.html#format12) format file, an extension of the bed format.
 
@@ -111,7 +111,7 @@ To analyze these results in R we recommend using the `rtracklayer` package.  A s
 The full script with details on how to create all required files and run the script is provided
 [here](https://github.com/KlugerLab/Ritornello/blob/master/Scripts/AnalyzeRitornelloOutput.R)
  
-#Ritornello options:
+# Ritornello options:
 `--help`	print the help message
 
 `--version`	print Ritornello's current version
@@ -131,12 +131,12 @@ Ex. `-o /home/MyUser/MyOutputPrefix` would report called peaks to `/home/MyUser/
 
 `--OCE`	Specifying the OCE option tells Ritornello to include an additional term in the likelihood ratio test to more strictly control for Open Chromatin Effects.  These are areas of high coverage which are generally uniform and also present in sonicated input DNA.  Ritornello's background coverage term can usually control for most open chromatin effects, however, when coverage is extremely high, it can call spurious peaks at the bounderies of these regions where coverage changes abruptly.  `--OCE` is useful to avoid spurious results in highly sequenced small genomes (yeast), but may cause a loss of sensitivity and not recommended for mouse, human, etc.
 
-`--Correct-PCR`	Specifying the `--Correct-PCR` option tells Ritornello to preprocess the read coverage and control outliers likely due to PCR amplification bias.  We recommend using this option unless you are sure PCR won't me an issue.  It does take increase computational time.
+`--no-artifact-handling`	Specifying the `--no-artifact-handling` option tells Ritornello not to try to detect and remove read length artifacts.  You can add this option if your reads are fairly long and you suspect there wont be any issues with artifacts related to mismapping of reads.
 
-#Ritornello advanced options:
+# Ritornello advanced options:
 
-`--debug-folder`	Specify a folder to print out debug files (must end with a "/")
+`--debug-folder`	Specify a folder to print out debug files (must end with a "/").  This is mainly used for development purposes.
 
-`--filter-file`	Specify a filter shape to use for this run.  Filter shapes are printed to fir.txt in the debug folder when it is specified.  It is simply a vector of numbers giving the negative strand (or reverse positive strand) filter shape.  --FLD-file must be set to use this option
+`--filter-file`	Specify a filter shape to use for this run.  Filter shapes are printed to fir.txt in the debug folder when it is specified.  It is simply a vector of numbers giving the negative strand (or reverse positive strand) filter shape.  --FLD-file must be set to use this option.  Mainly used for development purposes
 
-`--FLD-file`		Specify a fragment length distribution for use with this run.  FLD files are printed to fld.txt in the debug folder when the option is specified.  It is simply a vector giving the distibution of the fragment lengths.
+`--FLD-file`		Specify a fragment length distribution for use with this run.  FLD files are printed to fld.txt in the debug folder when the option is specified.  It is simply a vector giving the distibution of the fragment lengths.  Mainly used for development purposes

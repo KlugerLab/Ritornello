@@ -33,6 +33,8 @@ Config::Config() {
 	modelOpenChromatinEffect = false;
 	//Flag to turn on PCR correction
 	correctPCR = false;
+	//Flag to turn on PCR correction
+	handleArtifacts = true;
 }
 Config::~Config() {
 }
@@ -123,6 +125,10 @@ int Config::parseCmdLine(int argc, char* argv[]){
 		correctPCR=true;
 		fprintf(stderr, "PCR correction preprocessing on\n");
 	}
+	if(_optionExists(argv, argv + argc, "--no-artifact-handling")){
+		handleArtifacts=false;
+		fprintf(stderr, "Turning off artifact handling\n");
+	}
 	return 0;
 }
 //Accessors
@@ -167,6 +173,9 @@ bool Config::getModelOpenChromatinEffect(){
 }
 bool Config::getCorrectPCR(){
 	return correctPCR;
+}
+bool Config::getHandleArtifacts(){
+	return handleArtifacts;
 }
 void Config::setBamFileName(char* argBamFileName){
 	if(bamFileName!=NULL) delete bamFileName;

@@ -171,7 +171,7 @@ void Ritornello::testPeakProjections(double artifactTestRatio){
 		peaks.data[ii].artifactScore = Artifact::test(parms.getMaxFragmentLength(),
 				readLength, fir, peaks.data[ii],artifactTestRatio, halfLength);
 
-		if(peaks.data[ii].artifactScore<0.5)
+		if(peaks.data[ii].artifactScore<0.5 && parms.getHandleArtifacts())
 			peaks.data[ii].isArtifact = true;
 		else
 			peaks.data[ii].isArtifact = false;
