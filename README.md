@@ -71,9 +71,9 @@ This will create an index `MySortedBamFile.bam.bai` file in the same directory
 # Using Ritornello:
 -basic usage
 
-`./Ritornello --Correct-PCR -f MySortedBamFile.bam `
+`./Ritornello -f MySortedBamFile.bam `
 
-Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools.  We recommend the --Correct-PCR option unless you are fairly certain that PCR amplification bias wont be an issue.  This option does increase runtime however.
+Where `MySortedBamFile.bam` is an index/sorted bam file that can be obtained by first mapping the fastq files using an aligner (such as bowtie) and then sorting and indexing using samtools.
 
 # Analyzing the output:
 

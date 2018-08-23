@@ -28,3 +28,4 @@
 *.app
 /perf.data
 /core
+/data/
